@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <section class="container">
+    <h1>Registrar acessos.</h1>
+    <p>
+      Preencha os campos para cadastrar no banco de dados. 
+    </p>
+    <form id="userForm" class="form">
+        <span class="descrit">Nome Completo.</span>
+        <input type="text" name="nome" placeholder="Nome" required>
+        <span class="descrit">Cliente do prestador.</span>
+        <input type="text" name="cliente" placeholder="Cliente" required>
+        <span class="descrit">Service tag ou patrimônio vinculado ao profissional.</span>
+        <input type="text" name="identificador" placeholder="Service Tag ou Patrimônio" required>
+        <span class="descrit">Chave única enviada ao profissional, juntamente de seu equipamento.</span>
+        <input type="text" name="key" placeholder="Chave única" required>
+        <br>
+        <button type="submit">Registrar</button></form><br>
+    </form>
+  </section>
+    <script src="./js/formHandler.js"></script>
+</body>
+</html>

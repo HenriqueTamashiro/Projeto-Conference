@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+:root {
+ --primary-color:rgb(62, 71, 73);
+ --primary-color2:rgb(41, 134, 162);
+ --padd:0;
+ --margem:0;
+}
+body {
+    background: var(--primary-color);
+    color: aliceblue;
+    padding:var(--padd);
+    margin: var(--margem);
+    font-family: "Oswald", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 900;
+    font-style: normal;
+}
+* {
+    box-sizing: border-box;   
+    outline: 0;
+}
+.container{
+    max-width: 640px;
+    margin: 5% auto;
+    background-color:rgb(19, 31, 31);
+    padding: 1% 2%;
+    border-radius: 40px;    
+}
+form input, form label, form button {
+    display: block;
+    width: 100%;
+    margin-bottom: 1%;
+    border-radius: 10px;
+}
+
+form label{
+    font-size: 25px;
+}
+
+form input{
+    font-size: 20px;
+    height: 45px;
+    padding: 0 10px;
+}
+form input:focus{
+    outline: 3px solid  var(--primary-color2);
+
+}
+form button, .response button{
+    border: none;
+    background-color: var(--primary-color);
+    color: aliceblue;
+    font-size: 18px;
+    height: 50px;
+    cursor:pointer;
+}
+form button:hover, .response button:hover{
+    background-color: var(--primary-color2);
+}
+form button:active, .response button:hover{
+background-color:rgb(70, 161, 194);
+}
+
+.descrit {
+    font-size: 13px;
+}
+
+.botao {
+    border: none;
+    background-color: var(--primary-color);
+    color: aliceblue;
+    font-size: 18px;
+    height: 50px;
+    cursor:pointer;
+}

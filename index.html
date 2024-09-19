@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liberação de acessos CBYK.</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <section class="container">
+    <h1>Formulário para Liberação de Acesso CBYK</h1>
+    <p>
+      Preencha os campos para liberar os seus acessos de equipamento e e-mail. 
+    </p>
+
+    <form class="form" action="">
+      <label for="nome">Nome</label>
+      <span class="descrit">Seu nome Completo.</span>
+      <input type="text" class="name" id="nome" placeholder="Nome">
+
+      <label for="Cliente">Cliente</label>
+      <span class="descrit">Onde está alocado.</span>
+      <input type="text" class="cliente" id="Cliente" placeholder="Cliente">
+
+      <label for="Input-id">ID</label>
+      <span class="descrit">Service tag (Etiqueta preta) ou Patrimônio.</span>
+      <input type="text" class="id_input" id="Input-id" placeholder="Identificador">
+
+      <label for="Key-valor">Key</label>
+      <span class="descrit">Sequência de números recebido juntamente de seu equipamento.</span>
+      <input type="text" class="key_input" id="Key-valor" placeholder="Chave única">
+
+        <br><button>Enviar</button></br>
+    </form>
+
+    <div class="content"></div> <!-- Área para carregar o conteúdo -->
+  </section>
+
+  <script src="./js/main.js"></script>
+</body>
+</html>
