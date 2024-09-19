@@ -6,7 +6,8 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
       nome: formData.get('nome'),
       cliente: formData.get('cliente'),
       identificador: formData.get('identificador'),
-      key_valor: formData.get('key')  // Consistência com o nome da chave
+      key_valor: formData.get('key'),
+      acessos: formData.get('acessos') 
   };
 
   fetch('http://127.0.0.1:3000/add-user', {

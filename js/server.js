@@ -35,7 +35,8 @@ connection.connect(err => {
       nome VARCHAR(255) NOT NULL,
       cliente VARCHAR(255) NOT NULL,
       identificador VARCHAR(255) NOT NULL,
-      key_valor VARCHAR(255) NOT NULL
+      key_valor VARCHAR(255) NOT NULL,
+      acessos VARCHAR(255) NOT NULL
     );
   `;
 
@@ -50,14 +51,14 @@ connection.connect(err => {
 
 // Endpoint para inserção de dados
 app.post('/add-user', (req, res) => {
-  const { nome, cliente, identificador, key_valor } = req.body;
+  const { nome, cliente, identificador, key_valor, acessos} = req.body;
 
   const insertQuery = `
-    INSERT INTO usuarios (nome, cliente, identificador, key_valor)
-    VALUES (?, ?, ?, ?);
+    INSERT INTO usuarios (nome, cliente, identificador, key_valor, acessos)
+    VALUES (?, ?, ?, ?, ?);
   `;
 
-  const values = [nome, cliente, identificador, key_valor];
+  const values = [nome, cliente, identificador, key_valor, acessos];
 
   connection.query(insertQuery, values, (err, result) => {
     if (err) {
