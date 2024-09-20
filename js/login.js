@@ -1,13 +1,12 @@
 document.getElementById('loginForm').addEventListener('submit', function(event) {
     event.preventDefault();
-    let logado = false;
 
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
     const data = { username, password };
 
-    fetch('http://seu-servidor.com/login', {
+    fetch('http://127.0.0.1:3300/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -16,14 +15,15 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     })
     .then(response => response.json())
     .then(result => {
-        if (result.success) {
-            logado = true;
-            alert('Login bem-sucedido!');
+        if (result.token) {  // Se o login foi bem-sucedido e o token foi retornado
+            localStorage.setItem('token', result.token);  // Salva o token no Local Storage
+            window.location.href = '../home.html';  // Redireciona para a página do painel
         } else {
-            alert('Usuário ou senha incorretos.');
+            alert(result.message);  // Exibe a mensagem de erro retornada
         }
     })
     .catch(error => {
         console.error('Erro:', error);
+        alert('Ocorreu um erro no login. Tente novamente.');
     });
 });

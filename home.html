@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulário</title>
     <link rel="stylesheet" href="./css/style.css">
-    <div class="menu">HOME  |  DEVICE  | PROJETOS </div>
+    <div class="menu"><div class="dashboard-container">Você está logado como:
+    <span id="dashboard">Carregando dados...</span> <!-- Aqui será exibida a mensagem personalizada do servidor -->
+  </div> </div>
 </head>
 <body>
   <section class="container">
@@ -27,6 +29,7 @@
         <br><br>
         <button type="submit">Registrar</button></form><br>
     </form>
+
   </section>
     <script src="./js/formHandler.js"></script>
 </body>

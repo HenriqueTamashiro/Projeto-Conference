@@ -2,25 +2,27 @@ const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const app = express();
+const JWT_SECRET = 'minha-chave-secreta';  // Definição global da chave secreta
 
 // Configurar o CORS para permitir todos os domínios
 app.use(cors());
-
-// Configuração para servir arquivos estáticos, como o favicon
-app.use(express.static('public')); // Certifique-se de que o diretório `public` contém o favicon
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Configuração da conexão com o banco de dados
+const porta_db = 3306;
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '#c1B2y3k4@e5n6C7r8y9Pt@',
-  database: 'users'
+  database: 'users',
+  port: porta_db
 });
+console.log('Servidor de DB rodando na porta: ', porta_db);
 
 connection.connect(err => {
   if (err) {
@@ -28,41 +30,16 @@ connection.connect(err => {
     return;
   }
   console.log('Conectado ao banco de dados!');
-
-  const createTableQuery = `
-    CREATE TABLE IF NOT EXISTS usuarios (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      nome VARCHAR(255) NOT NULL,
-      cliente VARCHAR(255) NOT NULL,
-      identificador VARCHAR(255) NOT NULL,
-      key_valor VARCHAR(255) NOT NULL,
-      acessos VARCHAR(255) NOT NULL
-    );
-  `;
-
-  connection.query(createTableQuery, (err, result) => {
-    if (err) {
-      console.error('Erro ao criar a tabela: ', err);
-      return;
-    }
-    console.log('Tabela criada com sucesso!');
-  });
 });
 
-// Endpoint para inserção de dados
+// --- Rota para inserir um novo usuário no banco ---
 app.post('/add-user', (req, res) => {
-  const { nome, cliente, identificador, key_valor, acessos} = req.body;
+  const { nome, cliente, identificador, key_valor, acessos } = req.body;
+  const insertQuery = `INSERT INTO usuarios (nome, cliente, identificador, key_valor, acessos) VALUES (?, ?, ?, ?, ?)`;
 
-  const insertQuery = `
-    INSERT INTO usuarios (nome, cliente, identificador, key_valor, acessos)
-    VALUES (?, ?, ?, ?, ?);
-  `;
-
-  const values = [nome, cliente, identificador, key_valor, acessos];
-
-  connection.query(insertQuery, values, (err, result) => {
+  connection.query(insertQuery, [nome, cliente, identificador, key_valor, acessos], (err, result) => {
     if (err) {
-      console.error('Erro ao inserir dados: ', err);
+      console.error('Erro ao inserir dados:', err);
       return res.status(500).send('Erro ao inserir dados');
     }
     console.log('Dados inseridos com sucesso!', result.insertId);
@@ -70,11 +47,90 @@ app.post('/add-user', (req, res) => {
   });
 });
 
-// Endpoint básico para verificar se o servidor está funcionando
-app.get('/', (req, res) => {
-  res.send('Servidor está funcionando');
+// --- Rota para buscar usuário pelo identificador e key ---
+app.post('/get-user', (req, res) => {
+  const { identificador, key_valor } = req.body;
+  const selectQuery = `SELECT * FROM usuarios WHERE identificador = ? AND key_valor = ?`;
+
+  connection.query(selectQuery, [identificador, key_valor], (err, results) => {
+    if (err) {
+      console.error('Erro ao buscar os dados:', err);
+      return res.status(500).send('Erro ao buscar os dados');
+    }
+
+    if (results.length > 0) {
+      console.log('Usuário encontrado:', results);
+      res.json(results);
+    } else {
+      console.log('Nenhum usuário encontrado com esses dados.');
+      res.status(404).send('Usuário não encontrado');
+    }
+  });
 });
 
-app.listen(3000, () => {
-  console.log('Servidor rodando na porta 3000');
+// --- Endpoint para login (com verificação de senha e geração de token JWT) ---
+// Endpoint para login
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+      return res.status(400).json({ message: 'Usuário e senha são obrigatórios.' });
+  }
+
+  // Verifica se o usuário existe
+  const userCheckQuery = `SELECT * FROM autenticacao WHERE username = ?`;
+  connection.query(userCheckQuery, [username], async (err, results) => {
+      if (err) {
+          console.error('Erro ao consultar o banco de dados:', err); // Log detalhado do erro
+          return res.status(500).json({ message: 'Erro no servidor ao consultar o banco de dados.' });
+      }
+
+      if (results.length === 0) {
+          return res.status(400).json({ message: 'Usuário não encontrado.' });
+      }
+
+      const user = results[0];
+
+      try {
+          // Verifica a senha criptografada
+          const isPasswordValid = await bcrypt.compare(password, user.password);
+          if (!isPasswordValid) {
+              return res.status(400).json({ message: 'Senha incorreta.' });
+          }
+
+          // Gera o token JWT
+          const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, {
+              expiresIn: '1h',  // Token expira em 1 hora
+          });
+
+          res.json({ success: true, token });
+
+      } catch (compareError) {
+          console.error('Erro ao comparar a senha:', compareError);
+          res.status(500).json({ message: 'Erro no servidor ao verificar a senha.' });
+      }
+  });
+});
+
+// --- Middleware para autenticação via JWT ---
+const authenticateToken = (req, res, next) => {
+  const token = req.headers['authorization'];
+  if (!token) return res.status(401).json({ message: 'Token não fornecido.' });
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ message: 'Token inválido.' });
+    req.user = user;
+    next();
+  });
+};
+
+// --- Rota protegida: Dashboard ---
+app.get('/dashboard', authenticateToken, (req, res) => {
+  res.json({ message: `${req.user.username}`});
+});
+
+// --- Servidor rodando na porta 3300 ---
+const porta = 3300;
+app.listen(porta, () => {
+  console.log('Servidor express rodando na porta: ', porta);
 });

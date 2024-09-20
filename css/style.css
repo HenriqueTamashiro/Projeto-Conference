@@ -106,3 +106,7 @@ outline: 2px solid  var(--primary-color2);
     font-family: "Oswald", sans-serif;
     font-optical-sizing: auto;
 }
+#dashboard {
+    text-shadow: 2px 2px black;
+    color:blueviolet;
+}

@@ -1,71 +1,48 @@
-const loadContent = () => {
+document.getElementById('userForm').addEventListener('submit', function(event) {
+  event.preventDefault(); // Impede o envio padrão do formulário
 
-    const form = document.querySelector('.form');
-    // Carrega a página localizada na pasta 'pages'
-    
-    const responseLoad = (evento) =>{
-    
-    evento.preventDefault();
-    fetch('/pages/responseContent.html')
-      .then(response => {
-        // Verifica se a resposta foi bem-sucedida (código HTTP 200)
-        if (!response.ok) {
-          throw new Error('Erro ao carregar o conteúdo'); // Se não, lança um erro
-        }
-        return response.text(); // Transforma a resposta em texto
-      })
-      .then(data => {
-        // Atualiza a div com o conteúdo carregado
-        document.querySelector('.container').innerHTML='';
-        document.querySelector('.container').innerHTML = data;
-      })
-      .catch(error => console.error('Erro:', error));
-      
-    };
+  const identificador = document.querySelector('.id_input').value;
+  const key_valor = document.querySelector('.key_input').value;
 
-    form.addEventListener('submit', responseLoad);
+  const valor = {
+    identificador: identificador,
+    key_valor: key_valor
   };
-  
 
-  loadContent();
-/*
-const sendForm = () => {
-const receiveData = [];
-
-const form = document.querySelector('.form');
-const container = document.querySelector('.container');
-
-
-const loadForm = (event) => {
-    event.preventDefault();
-    const name = form.querySelector('.name').value;
-    const cliente = form.querySelector('.cliente').value;
-    const id_input = form.querySelector('.id_input').value;
-    const key_input = form.querySelector('.key_valor').value;
-
-receiveData.push({
-    Nome: name,
-    Cliente: cliente,
-    ID: id_input,
-    Key: key_input,
+  fetch('http://127.0.0.1:3300/get-user', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(valor),
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Erro ao buscar os dados: ' + response.statusText);
+    }
+    return response.json();
+  })
+  .then(valor => {
+    console.log('Dados recebidos:', valor);
+    
+    // Exibe os dados no HTML
+    const resultadoDiv = document.querySelector('.container');
+    resultadoDiv.innerHTML = ''; // Limpa os resultados anteriores
+    
+    valor.forEach(user => {
+      const userElement = document.createElement('div');
+      userElement.innerHTML = `
+        <p><strong>Nome:</strong> ${user.nome}</p>
+        <p><strong>Cliente:</strong> ${user.cliente}</p>
+        <p><strong>Identificador:</strong> ${user.identificador}</p>
+        <p><strong>Acessos:</strong> ${user.acessos}</p>
+      `;
+      resultadoDiv.appendChild(userElement);
+    });
+  })
+  .catch(error => {
+    console.error('Erro:', error);
+    const resultadoDiv = document.getElementById('resultado');
+    resultadoDiv.innerHTML = '<p>Erro ao buscar os dados. Tente novamente.</p>';
+  });
 });
-   
-
-  container.innerHTML = `<div class='response'>
-      <h2>Informações Recebidas:</h2>
-      <p><strong>Nome:</strong> ${name}</p>
-      <p><strong>Cliente:</strong> ${cliente}</p>
-      <p><strong>ID:</strong> ${id_input}</p>
-      <p><strong>Key:</strong> ${key_input}</p>
-      <p><em>Seu acesso foi liberado com sucesso. Verifique os e-mails de confirmação!</em></p>
-      <button onclick="window.location.reload()">Voltar</button> </div>
-    `;
-
-};
-
-  console.log(receiveData);
-  form.addEventListener('submit', loadForm);
-};
-
-sendForm();
-*/
