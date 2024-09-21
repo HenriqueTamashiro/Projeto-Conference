@@ -72,6 +72,4 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
             });
     });
 
-   
-      
 });

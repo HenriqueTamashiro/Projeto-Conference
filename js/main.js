@@ -36,13 +36,14 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
         <p><strong>Cliente:</strong> ${user.cliente}</p>
         <p><strong>Identificador:</strong> ${user.identificador}</p>
         <p><strong>Acessos:</strong> ${user.acessos}</p>
+        <button onclick="window.location.reload()">Voltar</button> </div>
       `;
       resultadoDiv.appendChild(userElement);
     });
   })
   .catch(error => {
     console.error('Erro:', error);
-    const resultadoDiv = document.getElementById('resultado');
+    const resultadoDiv = document.getElementById('content');
     resultadoDiv.innerHTML = '<p>Erro ao buscar os dados. Tente novamente.</p>';
   });
 });

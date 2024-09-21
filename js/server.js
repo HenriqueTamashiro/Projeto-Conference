@@ -52,15 +52,15 @@ app.post('/get-user', (req, res) => {
   const { identificador, key_valor } = req.body;
   const selectQuery = `SELECT * FROM usuarios WHERE identificador = ? AND key_valor = ?`;
 
-  connection.query(selectQuery, [identificador, key_valor], (err, results) => {
+  connection.query(selectQuery, [identificador, key_valor], (err, resultados) => {
     if (err) {
       console.error('Erro ao buscar os dados:', err);
       return res.status(500).send('Erro ao buscar os dados');
     }
 
-    if (results.length > 0) {
-      console.log('Usuário encontrado:', results);
-      res.json(results);
+    if (resultados.length > 0) {
+      console.log('Usuário encontrado:', resultados);
+      res.json(resultados);
     } else {
       console.log('Nenhum usuário encontrado com esses dados.');
       res.status(404).send('Usuário não encontrado');
@@ -111,6 +111,19 @@ app.post('/login', (req, res) => {
       }
   });
 });
+
+app.post('/logout', (req, res) => {
+  // Se estiver usando sessões
+  req.session.destroy(err => {
+      if (err) {
+          return res.status(500).send('Erro ao deslogar');
+      }
+      res.clearCookie('connect.sid'); // Limpa o cookie da sessão
+      res.status(200).send('Deslogado com sucesso');
+  });
+});
+
+
 
 // --- Middleware para autenticação via JWT ---
 const authenticateToken = (req, res, next) => {
