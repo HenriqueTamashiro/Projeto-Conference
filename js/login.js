@@ -17,7 +17,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     .then(result => {
         if (result.token) {  // Se o login foi bem-sucedido e o token foi retornado
             localStorage.setItem('token', result.token);  // Salva o token no Local Storage
-            window.location.href = '../home.html';  // Redireciona para a página do painel
+            window.location.href = '../cadastro_acessos.html';  // Redireciona para a página do painel
         } else {
             alert(result.message);  // Exibe a mensagem de erro retornada
         }

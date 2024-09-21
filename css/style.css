@@ -110,7 +110,7 @@ outline: 2px solid  var(--primary-color2);
 
 /* Estilizando o botão do menu suspenso */
 #dashboard {
-    background-color:var(--primary-color2);
+    background-color:rgba(34, 112, 136, 0.74);
     color: white;
     padding:20% 10px;
     font-size: 16px;
@@ -198,7 +198,7 @@ outline: 2px solid  var(--primary-color2);
 
 
 .menuDrop {
-    background-color:var(--primary-color2);
+    background-color:rgba(34, 112, 136, 0.74);
     color: white;
     padding:22% 10px;
     font-size: 16px;
@@ -211,3 +211,7 @@ outline: 2px solid  var(--primary-color2);
     color: black;
 
 }
+#logoutButton {
+    cursor: pointer;
+}
+
