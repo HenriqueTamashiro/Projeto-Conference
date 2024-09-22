@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('token');  // Verifica se o token existe
-    const contai = document.querySelector('.container');
     if (!token) {
-        alert('Você precisa estar logado para acessar esta página. Ou não possui acesso a esta área');
+        alert('Você precisa estar logado para acessar esta página ou não possui acesso ');
         
         window.location.href = 'http://127.0.0.1:5500/pages/login.html';  // Redireciona para a página de login
         return;  // Interrompe a execução
@@ -34,6 +33,32 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
+fetch('./pages/header.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('header-placeholder').innerHTML = data;
+        document.getElementById('logoutButton').addEventListener('click', async () => {
+            try {
+                const response = await fetch('http://127.0.0.1:3300/logout', {
+                    method: 'POST',
+                    credentials: 'include' // Inclui cookies na requisição, se necessário
+                });
+        
+                if (response.ok) {
+                    localStorage.removeItem('token'); // Remove o token do localStorage
+                    window.location.href = 'http://127.0.0.1:5500/pages/login.html'; // Redireciona para a página de login
+                } else {
+                    console.error('Erro ao deslogar');
+                    alert('Erro ao deslogar. Tente novamente.');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        });
+        
+      });
+
+      
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -111,21 +136,6 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
     });
 
 });
-document.getElementById('logoutButton').addEventListener('click', async () => {
-    try {
-        const response = await fetch('http://127.0.0.1:3300/logout', {
-            method: 'POST',
-            credentials: 'include' // Inclui cookies na requisição, se necessário
-        });
 
-        if (response.ok) {
-            localStorage.removeItem('token'); // Remove o token do localStorage
-            window.location.href = 'http://127.0.0.1:5500/pages/login.html'; // Redireciona para a página de login
-        } else {
-            console.error('Erro ao deslogar');
-            alert('Erro ao deslogar. Tente novamente.');
-        }
-    } catch (error) {
-        console.error('Erro:', error);
-    }
-});
+
+

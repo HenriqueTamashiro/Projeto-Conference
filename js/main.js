@@ -47,3 +47,29 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
     resultadoDiv.innerHTML = '<p>Erro ao buscar os dados. Tente novamente.</p>';
   });
 });
+fetch('./pages/header.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('header-placeholder').innerHTML = data;
+        document.getElementById('logoutButton').addEventListener('click', async () => {
+          try {
+              const response = await fetch('http://127.0.0.1:3300/logout', {
+                  method: 'POST',
+                  credentials: 'include' // Inclui cookies na requisição, se necessário
+              });
+      
+              if (response.ok) {
+                  localStorage.removeItem('token'); // Remove o token do localStorage
+                  window.location.href = 'http://127.0.0.1:5500/pages/login.html'; // Redireciona para a página de login
+              } else {
+                  console.error('Erro ao deslogar');
+                  alert('Erro ao deslogar. Tente novamente.');
+              }
+          } catch (error) {
+              console.error('Erro:', error);
+          }
+      });      
+
+      });
+
+

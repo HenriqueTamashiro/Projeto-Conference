@@ -80,6 +80,27 @@ app.post('/get-user', (req, res) => {
   });
 });
 
+
+// --- Rota para logout ---
+app.post('/logout', (req, res) => {
+  if (!req.session) {
+      return res.status(400).send('Sessão não existe');
+  }
+
+  req.session.destroy(err => {
+      if (err) {
+          console.error('Erro ao destruir a sessão:', err);
+          return res.status(500).send('Erro ao deslogar');
+      }
+      res.clearCookie('connect.sid');
+      req.session = null; // Limpa a sessão
+      res.status(200).send('Deslogado com sucesso');
+  });
+});
+
+
+
+
 // --- Endpoint para login ---
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
@@ -146,19 +167,6 @@ app.listen(porta, () => {
   console.log('Servidor express rodando na porta: ', porta);
 });
 
-// --- Rota para logout ---
-app.post('/logout', (req, res) => {
-  if (!req.session) {
-      return res.status(400).send('Sessão não existe');
-  }
 
-  req.session.destroy(err => {
-      if (err) {
-          console.error('Erro ao destruir a sessão:', err);
-          return res.status(500).send('Erro ao deslogar');
-      }
-      res.clearCookie('connect.sid');
-      req.session = null; // Limpa a sessão
-      res.status(200).send('Deslogado com sucesso');
-  });
-});
+
+

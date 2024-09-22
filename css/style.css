@@ -6,28 +6,9 @@
  --margem:0;
  --altura:6%;
 }
-.menu {
-    display: flex; /* Usar flexbox */
-    justify-content: space-between; /* Espaço entre os itens */
-    align-items: center; /* Alinha verticalmente */
-    background-color: var(--primary-color2);
-    width: 100%;
-    height: var(--altura);
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    z-index: 700;
-    padding: 0.2%;
-    font-size: 18px; 
-    color: white; 
-    flex: 1;
-    
-}
-
 body {
     background: var(--primary-color);
     color: aliceblue;
-    padding-top: 20px; /* Espaço para o menu fixo */
     margin:0;
     font-family: "Oswald", sans-serif;
     font-optical-sizing: auto;
@@ -35,10 +16,6 @@ body {
     font-style: normal;
 }
 
-* {
-    box-sizing: border-box;   
-    outline: 0;
-}
 .container{
     max-width: 640px;
     margin: 5% auto;
@@ -110,110 +87,113 @@ outline: 2px solid  var(--primary-color2);
     font-optical-sizing: auto;
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
 
-/* Estilizando o botão do menu suspenso */
-#dashboard {
-    background-color:rgba(34, 112, 136, 0.74);
+  /*MENU DROPDOWN DE LOGOUT */
+/* Header Container */
+.header {
+    display: flex;
+    justify-content: space-between; /* Alinha o menu da esquerda e da direita */
+    background-color: #2196F3;
+    height: 56px;
+    padding: 0 20px; /* Espaçamento horizontal */
+    align-items: center;
+}
+
+/* Estilo comum dos dropdowns */
+.dropdown-content-left, .dropdown-content-right {
+    display: none;
+    position: absolute;
+    background-color: #ffefee;
+    min-width:auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    margin-top: 15px;
+}
+
+.dropdown-content-right a {
+    color: rgb(0, 0, 0);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    
+}
+
+.dropdown-content-right a:hover {
+    background-color: rgba(253, 0, 0, 0.644);
+}
+.dropdown-content-left a:hover {
+    background-color: rgba(54, 54, 54, 0.219);
+}
+.dropdown-content-left a{
+    color: rgb(0, 0, 0);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+/* Estilo para hover */
+.menu-container:hover .dropdown-content-left,
+.dashboard-container:hover .dropdown-content-right {
+    display: block;
+}
+
+.menu-left .menu-right{
+    padding: 50px;
+}
+
+
+/* Menu Esquerdo */
+.menu-left {
+    position: relative;
+}
+
+#menu-left-button {
+    background-color: #2196F3;
     color: white;
-    padding:10% 10px;
+    padding: 16px;
     font-size: 16px;
     border: none;
     cursor: pointer;
+    white-space: nowrap; /* Impede quebra de linha */
+}
+#menu-left-button:hover {
+    background-color: #ffefee;
+    color: rgb(0, 0, 0);
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
 }
 
-.dropdown:hover #dashboard  {
-    background-color:white;
-    color: black;
-}
-
-.menu-left {
-    display: flex; /* Flex para o menu à esquerda */
-    padding: 5px;
-    position: relative;
-    z-index: 900;
-    right: 0;
-}
-
-
-/* O container do dropdown */
-.dropdown {
-    padding: 5px;
+/* Menu Direito */
+.menu-right {
     position: relative;
     display: flex;
-    z-index: 900;
-    right: 0;
+    align-items: center;
 }
 
-/* Conteúdo do dropdown (links) */
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f1f1f1;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    margin-top: 49px;
-    z-index: 1;
-}
-
-.dropdown-c {
-    display: none;
-    position: absolute;
-    background-color: #f1f1f1;
-    min-width: 160px;
-    justify-content: stretch;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    margin-top: 49px;
-    z-index: 1;
-}
-
-/* Links do dropdown */
-.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    
-}
-.dropdown-c a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    
-}
-
-/* Mudança de cor dos links no hover */
-.dropdown-content a:hover {
-    background-color: #f35a5a;
-}
-.dropdown-c a:hover {
-    background-color: #ddd;
-}
-
-/* Mostra o dropdown ao passar o mouse */
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-.menu-left:hover .dropdown-c{
-    display: block;
-}
-
-
-.menuDrop {
-    background-color:rgba(34, 112, 136, 0.74);
+/* Dashboard (nome do usuário) */
+#dashboard {
+    background-color: #2196F3;
     color: white;
-    padding:22% 10px;
+    padding: 16px;
     font-size: 16px;
     border: none;
     cursor: pointer;
-    
+    white-space: nowrap; /* Impede quebra de linha no nome */
 }
-.menu-left:hover .menuDrop {
-    background-color:white;
-    color: black;
-
-}
-#logoutButton {
+#dashboard:hover{
+    background-color: #ffefee;
+    color: rgb(0, 0, 0);
+    padding: 16px;
+    font-size: 16px;
+    border: none;
     cursor: pointer;
+    white-space: nowrap; /* Impede quebra de linha no nome */
 }
-
