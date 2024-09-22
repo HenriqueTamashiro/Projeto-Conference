@@ -9,9 +9,6 @@
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.11.3"
   },
-  "name": "aulas",
-  "version": "1.0.0",
-  "main": "index.js",
   "scripts": {
     "start": "node js/server.js"
   },
