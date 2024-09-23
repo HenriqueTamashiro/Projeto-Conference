@@ -1,25 +1,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
 :root {
- --primary-color:rgb(62, 71, 73);
+ --primary-color:rgb(41, 41, 41);
  --primary-color2:rgb(41, 134, 162);
+ --primary-color3:linear-gradient(to right,#5204c618,
+ #478bfb18, #b54ae118,#8558de18);
  --padd:0;
  --margem:0;
  --altura:6%;
 }
 body {
-    background: var(--primary-color);
+    background: linear-gradient(to right,#030007,
+    #03070c, #0e0611,#0a0711);
+    
     color: aliceblue;
     margin:0;
     font-family: "Oswald", sans-serif;
     font-optical-sizing: auto;
     font-weight: 900;
     font-style: normal;
-}
+    background-attachment: fixed; /* Mantém o fundo fixo */
 
+}
+.logo img{
+    width: 60px;
+    height: 50px;
+    position: fixed;
+    top: 5px;
+}
 .container{
+
+    border: 1px solid #ffffff1e ;
     max-width: 640px;
-    margin: 5% auto;
-    background-color:rgb(19, 31, 31);
+    margin: 12% auto;
+    background: var(--primary-color3);
     padding: 1% 2%;
     border-radius: 40px;    
 }
@@ -50,6 +63,7 @@ form button, .response button{
     font-size: 18px;
     height: 50px;
     cursor:pointer;
+    border: 1px solid #ffffff1e ;
 }
 form button:hover, .response button:hover{
     background-color: var(--primary-color2);
@@ -95,14 +109,20 @@ outline: 2px solid  var(--primary-color2);
   
 
   /*MENU DROPDOWN DE LOGOUT */
-/* Header Container */
+
 .header {
+    border: 1px solid #ffffff1e ;
     display: flex;
     justify-content: space-between; /* Alinha o menu da esquerda e da direita */
-    background-color: #2196F3;
+    background-color:rgba(54, 53, 53, 0.459);
     height: 56px;
     padding: 0 20px; /* Espaçamento horizontal */
     align-items: center;
+    width: 100%;
+    position: fixed; 
+    top: 0; 
+    left: 0;  
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.418);
 }
 
 /* Estilo comum dos dropdowns */
@@ -114,6 +134,7 @@ outline: 2px solid  var(--primary-color2);
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
     margin-top: 15px;
+    
 }
 
 .dropdown-content-right a {
@@ -136,24 +157,44 @@ outline: 2px solid  var(--primary-color2);
     text-decoration: none;
     display: block;
 }
-/* Estilo para hover */
-.menu-container:hover .dropdown-content-left,
-.dashboard-container:hover .dropdown-content-right {
-    display: block;
+.menu-left-container {
+    display: flex; /* Alinha os menus da esquerda lado a lado */
+    
 }
 
-.menu-left .menu-right{
-    padding: 50px;
+/* Estilo para hover */
+.menu-container:hover .dropdown-content-left {
+    display: block;
+    
+}
+.dashboard-container:hover .dropdown-content-right{
+    display: block;
+    position:absolute;
+
+
 }
 
 
 /* Menu Esquerdo */
 .menu-left {
     position: relative;
+    right: 20px;
+    
+}
+/* Menu Direito */
+.menu-right {
+    position: relative;
+    display: flex;
+    align-items: center;
+    
+}
+#menu-left-button, #dashboard{
+
+    background-color: rgba(41, 41, 41, 0);
 }
 
 #menu-left-button {
-    background-color: #2196F3;
+    
     color: white;
     padding: 16px;
     font-size: 16px;
@@ -164,6 +205,7 @@ outline: 2px solid  var(--primary-color2);
 #menu-left-button:hover {
     background-color: #ffefee;
     color: rgb(0, 0, 0);
+    border: 1px solid #ffffff1e ;
     padding: 16px;
     font-size: 16px;
     border: none;
@@ -171,16 +213,9 @@ outline: 2px solid  var(--primary-color2);
     white-space: nowrap;
 }
 
-/* Menu Direito */
-.menu-right {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
 
 /* Dashboard (nome do usuário) */
 #dashboard {
-    background-color: #2196F3;
     color: white;
     padding: 16px;
     font-size: 16px;
@@ -191,6 +226,24 @@ outline: 2px solid  var(--primary-color2);
 #dashboard:hover{
     background-color: #ffefee;
     color: rgb(0, 0, 0);
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap; /* Impede quebra de linha no nome */
+}
+#loginButton:hover {
+    background-color: #ffefee;
+    color: rgb(0, 0, 0);
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+}
+#loginButton {
+   
+    color: white;
     padding: 16px;
     font-size: 16px;
     border: none;

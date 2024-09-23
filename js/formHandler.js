@@ -1,3 +1,69 @@
+// Função para carregar o header e gerenciar a exibição dos elementos
+document.addEventListener('DOMContentLoaded', async () => {
+    // Carregar o header
+    const headerResponse = await fetch('header.html');
+    const headerData = await headerResponse.text();
+    document.getElementById('header-placeholder').innerHTML = headerData;
+
+    // Verificar o token
+    const token = localStorage.getItem('token'); 
+
+    // Referências aos elementos do header
+    const profileMenu = document.getElementById('profileMenu');
+    const loginButton = document.getElementById('loginButton');
+    const dashboard = document.getElementById('dashboard');
+    
+    if (token) {
+        // Se o token existe, validar com o servidor
+        try {
+            const response = await fetch('http://127.0.0.1:3300/dashboard', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Token inválido ou expirado.');
+            }
+
+            const result = await response.json();
+            dashboard.innerText = result.message; // Exibe o nome do usuário
+            profileMenu.style.display = 'block';
+            loginButton.style.display = 'none';
+
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Sua sessão expirou. Faça login novamente.');
+            localStorage.removeItem('token');  // Remove o token inválido
+            window.location.href = 'http://127.0.0.1:5500/pages/login.html';  // Redireciona para a página de login
+        }
+
+        // Adicionar o evento de logout
+        document.getElementById('logoutButton').addEventListener('click', async () => {
+            try {
+                const response = await fetch('http://127.0.0.1:3300/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    localStorage.removeItem('token'); // Remove o token
+                    window.location.href = 'http://127.0.0.1:5500/pages/login.html'; // Redireciona para o login
+                } else {
+                    alert('Erro ao deslogar. Tente novamente.');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        });
+
+    } else {
+        // Caso não tenha token, mostrar o botão de login e ocultar o menu
+        profileMenu.style.display = 'none';
+        loginButton.style.display = 'block';
+    }
+});
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('token');  // Verifica se o token existe
     if (!token) {
@@ -33,32 +99,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
-fetch('./pages/header.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('header-placeholder').innerHTML = data;
-        document.getElementById('logoutButton').addEventListener('click', async () => {
-            try {
-                const response = await fetch('http://127.0.0.1:3300/logout', {
-                    method: 'POST',
-                    credentials: 'include' // Inclui cookies na requisição, se necessário
-                });
-        
-                if (response.ok) {
-                    localStorage.removeItem('token'); // Remove o token do localStorage
-                    window.location.href = 'http://127.0.0.1:5500/pages/login.html'; // Redireciona para a página de login
-                } else {
-                    console.error('Erro ao deslogar');
-                    alert('Erro ao deslogar. Tente novamente.');
-                }
-            } catch (error) {
-                console.error('Erro:', error);
-            }
-        });
-        
-      });
-
-      
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -138,4 +178,23 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
 });
 
 
+
+// Logout Handler
+document.getElementById('logoutButton').addEventListener('click', async () => {
+    try {
+        const response = await fetch('http://127.0.0.1:3300/logout', {
+            method: 'POST',
+            credentials: 'include'
+        });
+
+        if (response.ok) {
+            localStorage.removeItem('token'); // Remove o token
+            window.location.href = 'http://127.0.0.1:5500/pages/login.html'; // Redireciona para o login
+        } else {
+            alert('Erro ao deslogar. Tente novamente.');
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+    }
+});
 
