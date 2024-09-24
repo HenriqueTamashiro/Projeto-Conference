@@ -44,7 +44,7 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
   .catch(error => {
     console.error('Erro:', error);
     const resultadoDiv = document.getElementById('content');
-    resultadoDiv.innerHTML = '<p>Erro ao buscar os dados. Tente novamente.</p>';
+    resultadoDiv.innerHTML = '<p>Erro ao buscar os dados. Tente novamente.!</p>';
   });
 });
 document.addEventListener('DOMContentLoaded', async () => {
