@@ -11,7 +11,7 @@ const JWT_SECRET = 'minha-chave-secreta';  // Definição global da chave secret
 
 // Configurar o CORS para permitir todos os domínios
 app.use(cors({
-  origin: 'http://127.0.0.1:5500',
+  origin: '34.207.139.134',
   credentials: true
 }));
 app.use(bodyParser.json());

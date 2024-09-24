@@ -36,20 +36,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('Erro:', error);
             alert('Sua sessão expirou. Faça login novamente.');
             localStorage.removeItem('token');  // Remove o token inválido
-            window.location.href = 'http://127.0.0.1:5500/pages/login.html';  // Redireciona para a página de login
+            window.location.href = '/pages/login.html';  // Redireciona para a página de login
         }
 
         // Adicionar o evento de logout
         document.getElementById('logoutButton').addEventListener('click', async () => {
             try {
-                const response = await fetch('http://127.0.0.1:3300/logout', {
+                const response = await fetch('/logout', {
                     method: 'POST',
                     credentials: 'include'
                 });
 
                 if (response.ok) {
                     localStorage.removeItem('token'); // Remove o token
-                    window.location.href = 'http://127.0.0.1:5500/pages/login.html'; // Redireciona para o login
+                    window.location.href = '/pages/login.html'; // Redireciona para o login
                 } else {
                     alert('Erro ao deslogar. Tente novamente.');
                 }
@@ -69,13 +69,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!token) {
         alert('Você precisa estar logado para acessar esta página ou não possui acesso ');
         
-        window.location.href = 'http://127.0.0.1:5500/pages/login.html';  // Redireciona para a página de login
+        window.location.href = '/pages/login.html';  // Redireciona para a página de login
         return;  // Interrompe a execução
     }
 
     try {
         // Caso o token exista, verificar sua validade com o servidor
-        const response = await fetch('http://127.0.0.1:3300/dashboard', {
+        const response = await fetch('/dashboard', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`  // Envia o token JWT para validação
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Erro:', error);
         alert('Sua sessão expirou. Faça login novamente.');
         localStorage.removeItem('token');  // Remove o token inválido
-        window.location.href = 'http://127.0.0.1:5500/pages/login.html';  // Redireciona para a página de login
+        window.location.href = '/pages/login.html';  // Redireciona para a página de login
     }
 });
 
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 document.addEventListener('DOMContentLoaded', function() {
-    fetch('http://127.0.0.1:3300/dashboard', {
+    fetch('/dashboard', {
         method: 'GET',
         headers: {
             'Authorization': localStorage.getItem('token')  // Envia o token JWT
@@ -135,7 +135,7 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
       acessos: formData.get('acessos') 
   };
 
-  fetch('http://127.0.0.1:3300/add-user', {
+  fetch('/add-user', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
       alert('Erro ao enviar dados.');
   });
 
-  fetch('http://127.0.0.1:3300/acessos')
+  fetch('/acessos')
     .then(response => response.json()) // Converte a resposta para JSON
         .then(dataGet => {
             // Seleciona o corpo da tabela onde os dados serão inseridos
@@ -182,14 +182,14 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
 // Logout Handler
 document.getElementById('logoutButton').addEventListener('click', async () => {
     try {
-        const response = await fetch('http://127.0.0.1:3300/logout', {
+        const response = await fetch('/logout', {
             method: 'POST',
             credentials: 'include'
         });
 
         if (response.ok) {
             localStorage.removeItem('token'); // Remove o token
-            window.location.href = 'http://127.0.0.1:5500/pages/login.html'; // Redireciona para o login
+            window.location.href = '/pages/login.html'; // Redireciona para o login
         } else {
             alert('Erro ao deslogar. Tente novamente.');
         }
