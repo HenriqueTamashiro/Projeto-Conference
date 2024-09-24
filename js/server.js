@@ -101,6 +101,7 @@ app.post('/logout', (req, res) => {
 
 // --- Endpoint para login ---
 app.post('/login', (req, res) => {
+  console.log("Requisição recebida para /login");
   const { username, password } = req.body;
 
   if (!username || !password) {

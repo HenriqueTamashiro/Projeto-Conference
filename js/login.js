@@ -3,7 +3,8 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
 
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
-
+    const submitButton = document.getElementById('submitButton');
+    submitButton.disabled = true;  // Desabilita o botão
     const data = { username, password };
 
     fetch('/login', {
@@ -12,6 +13,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data)
+        
     })
     .then(response => response.json())
     .then(result => {
