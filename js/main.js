@@ -9,7 +9,7 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
     key_valor: key_valor
   };
 
-  fetch('http://34.207.139.134/get-user', {
+  fetch('/get-user', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
