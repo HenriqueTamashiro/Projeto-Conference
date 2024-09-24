@@ -6,7 +6,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
 
     const data = { username, password };
 
-    fetch('http://127.0.0.1:3300/login', {
+    fetch('/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
 });
 
 
-fetch('http://localhost:3300/isLoggedIn', {
+fetch('/isLoggedIn', {
     credentials: 'include',  // Inclui cookies de sessão
   })
   .then(response => response.json())
@@ -66,7 +66,7 @@ fetch('http://localhost:3300/isLoggedIn', {
     if (token) {
         // Se o token existe, validar com o servidor
         try {
-            const response = await fetch('http://127.0.0.1:3300/dashboard', {
+            const response = await fetch('/dashboard', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -86,20 +86,20 @@ fetch('http://localhost:3300/isLoggedIn', {
             console.error('Erro:', error);
             alert('Sua sessão expirou. Faça login novamente.');
             localStorage.removeItem('token');  // Remove o token inválido
-            window.location.href = 'http://127.0.0.1:5500/pages/login.html';  // Redireciona para a página de login
+            window.location.href = '/pages/login.html';  // Redireciona para a página de login
         }
 
         // Adicionar o evento de logout
         document.getElementById('logoutButton').addEventListener('click', async () => {
             try {
-                const response = await fetch('http://127.0.0.1:3300/logout', {
+                const response = await fetch('http://34.207.139.134/logout', {
                     method: 'POST',
                     credentials: 'include'
                 });
 
                 if (response.ok) {
                     localStorage.removeItem('token'); // Remove o token
-                    window.location.href = 'http://127.0.0.1:5500/pages/login.html'; // Redireciona para o login
+                    window.location.href = '../pages/login.html'; // Redireciona para o login
                 } else {
                     alert('Erro ao deslogar. Tente novamente.');
                 }

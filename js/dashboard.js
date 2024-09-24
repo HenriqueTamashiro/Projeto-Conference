@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-  fetch('http://127.0.0.1:3300/dashboard', {
+  fetch('http://34.207.139.134/dashboard', {
       method: 'GET',
       headers: {
           'Authorization': localStorage.getItem('token')  // Envia o token JWT

@@ -11,7 +11,7 @@ const JWT_SECRET = 'minha-chave-secreta';  // Definição global da chave secret
 
 // Configurar o CORS para permitir todos os domínios
 app.use(cors({
-  origin: 'http://127.0.0.1:5500',
+  origin: 'http://34.207.139.134/',
   credentials: true
 }));
 app.use(bodyParser.json());
@@ -99,8 +99,6 @@ app.post('/logout', (req, res) => {
 });
 
 
-
-
 // --- Endpoint para login ---
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
@@ -161,8 +159,8 @@ app.get('/dashboard', authenticateToken, (req, res) => {
   res.json({ message: `${req.user.username}`});
 });
 
-// --- Servidor rodando na porta 3300 ---
-const porta = 3300;
+
+const porta = 3400;
 app.listen(porta, () => {
   console.log('Servidor express rodando na porta: ', porta);
 });
