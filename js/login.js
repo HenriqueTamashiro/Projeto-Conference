@@ -1,4 +1,4 @@
-document.getElementById('loginForm').addEventListener('submit', function(event) {
+document.getElementById('loginButton1').addEventListener('submit', function(event) {
     event.preventDefault();
 
     const username = document.getElementById('username').value;
@@ -31,24 +31,8 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
 });
 
 
-fetch('/isLoggedIn', {
-    credentials: 'include',  // Inclui cookies de sessão
-  })
-  .then(response => response.json())
-  .then(data => {
-    const dashboard = document.getElementById('dashboard');
-    const logoutButton = document.getElementById('logoutButton');
 
-    if (data.loggedIn) {
-      // Exibe o nome do usuário e o botão de deslogar
-      dashboard.textContent = data.username;
-      logoutButton.style.display = 'block';
-    } else {
-      // Esconde o botão de deslogar se não estiver logado
-      dashboard.textContent = 'Não logado';
-      logoutButton.style.display = 'none';
-    }
-  });
+
 
   // Adiciona funcionalidade ao botão de logout
   document.addEventListener('DOMContentLoaded', async () => {
@@ -94,7 +78,7 @@ fetch('/isLoggedIn', {
         // Adicionar o evento de logout
         document.getElementById('logoutButton').addEventListener('click', async () => {
             try {
-                const response = await fetch('http://34.207.139.134/logout', {
+                const response = await fetch('/logout', {
                     method: 'POST',
                     credentials: 'include'
                 });

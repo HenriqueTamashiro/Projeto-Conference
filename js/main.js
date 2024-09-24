@@ -28,7 +28,7 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
     // Exibe os dados no HTML
     const resultadoDiv = document.querySelector('.container');
     resultadoDiv.innerHTML = ''; // Limpa os resultados anteriores
-    
+    console.log(`${user.acessos}`);
     valor.forEach(user => {
       const userElement = document.createElement('div');
       userElement.innerHTML = `
@@ -47,6 +47,9 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
     resultadoDiv.innerHTML = '<p>Erro ao buscar os dados. Tente novamente!.</p>';
   });
 });
+
+
+
 document.addEventListener('DOMContentLoaded', async () => {
   // Carregar o header
   const headerResponse = await fetch('./pages/header.html');
@@ -64,7 +67,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (token) {
       // Se o token existe, validar com o servidor
       try {
-          const response = await fetch('http://34.207.139.134/dashboard', {
+          const response = await fetch('/dashboard', {
               method: 'GET',
               headers: {
                   'Authorization': `Bearer ${token}`
@@ -84,20 +87,20 @@ document.addEventListener('DOMContentLoaded', async () => {
           console.error('Erro:', error);
           alert('Sua sessão expirou. Faça login novamente.');
           localStorage.removeItem('token');  // Remove o token inválido
-          window.location.href = 'http://34.207.139.134/pages/login.html';  // Redireciona para a página de login
+          window.location.href = 'login.html';  // Redireciona para a página de login
       }
 
       // Adicionar o evento de logout
       document.getElementById('logoutButton').addEventListener('click', async () => {
           try {
-              const response = await fetch('http://34.207.139.134/logout', {
+              const response = await fetch('/logout', {
                   method: 'POST',
                   credentials: 'include'
               });
 
               if (response.ok) {
                   localStorage.removeItem('token'); // Remove o token
-                  window.location.href = 'http://34.207.139.134/pages/login.html'; // Redireciona para o login
+                  window.location.href = '/pages/login.html'; // Redireciona para o login
               } else {
                   alert('Erro ao deslogar. Tente novamente.');
               }
