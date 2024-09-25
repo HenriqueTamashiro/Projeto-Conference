@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (token) {
         // Se o token existe, validar com o servidor
         try {
-            const response = await fetch('/dashboard', {
+            const response = await fetch('http://34.207.139.134:3300/dashboard', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Adicionar o evento de logout
         document.getElementById('logoutButton').addEventListener('click', async () => {
             try {
-                const response = await fetch('/logout', {
+                const response = await fetch('http://34.207.139.134:3300/logout', {
                     method: 'POST',
                     credentials: 'include'
                 });
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     try {
         // Caso o token exista, verificar sua validade com o servidor
-        const response = await fetch('/dashboard', {
+        const response = await fetch('http://34.207.139.134:3300/dashboard', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`  // Envia o token JWT para validação
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 document.addEventListener('DOMContentLoaded', function() {
-    fetch('/dashboard', {
+    fetch('http://34.207.139.134:3300/dashboard', {
         method: 'GET',
         headers: {
             'Authorization': localStorage.getItem('token')  // Envia o token JWT
@@ -154,7 +154,7 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
       alert('Erro ao enviar dados.');
   });
 
-  fetch('/acessos')
+  fetch('http://34.207.139.134:3300/acessos')
     .then(response => response.json()) // Converte a resposta para JSON
         .then(dataGet => {
             // Seleciona o corpo da tabela onde os dados serão inseridos
@@ -182,7 +182,7 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
 // Logout Handler
 document.getElementById('logoutButton').addEventListener('click', async () => {
     try {
-        const response = await fetch('logout', {
+        const response = await fetch('http://34.207.139.134:3300/logout', {
             method: 'POST',
             credentials: 'include'
         });

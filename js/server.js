@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const session = require('express-session');
 require('dotenv').config(); // Importa e configura o dotenv
 
+
 const app = express();
 const JWT_SECRET = process.env.SECRET_KEY;  // Usa a chave secreta do .env
 
@@ -27,6 +28,21 @@ const connection = mysql.createConnection({
   database: 'users',
   port: porta_db
 });
+
+
+
+
+async function findUserByUsername(username) {
+  return new Promise((resolve, reject) => {
+      const query = 'SELECT * FROM autenticacao WHERE username = ?';
+      connection.query(query, [username], (error, results) => {
+          if (error) {
+              return reject(error);
+          }
+          resolve(results[0]); // Retorna o primeiro usuário encontrado
+      });
+  });
+}
 console.log('Servidor de DB rodando na porta: ', porta_db);
 
 connection.connect(err => {
@@ -100,6 +116,35 @@ app.post('/logout', (req, res) => {
   });
 });
 
+// --- Endpoint para login ---
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  // Buscar o usuário no banco de dados
+  const user = await findUserByUsername(username);
+  
+  if (!user) {
+      return res.status(404).json({ message: 'Usuário não encontrado.' });
+  }
+
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordValid) {
+      return res.status(400).json({ message: 'Senha incorreta.' });
+  }
+
+  // Gerar um token JWT
+  const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, {
+      expiresIn: '1h' // O token expira em 1 hora
+  });
+
+  // Retornar a resposta com o token
+  return res.status(200).json({ message: 'Login bem-sucedido!', token });
+});
+
+
+
+// --- Middleware para autenticação via JWT ---
 const authenticateToken = (req, res, next) => {
   const token = req.headers['authorization'];
   if (!token) return res.status(401).json({ message: 'Token não fornecido.' });
@@ -110,41 +155,6 @@ const authenticateToken = (req, res, next) => {
     next();
   });
 };
-
-// --- Endpoint para login ---
-app.post('/login', async (req, res) => {
-  const { username, password } = req.body; 
-  const userCheckQuery = `SELECT * FROM autenticacao WHERE username = ?`;
-
-  connection.query(userCheckQuery, [username], async (err, results) => {
-      if (err) {
-          console.error('Erro ao consultar o banco de dados:', err);
-          return res.status(500).json({ message: 'Erro no servidor ao consultar o banco de dados.' });
-      }
-
-      if (results.length === 0) {
-          return res.status(400).json({ message: 'Usuário não encontrado.' });
-      }
-
-      const user = results[0];
-      try {
-          const isPasswordValid = await bcrypt.compare(password, user.password); // Aqui você compara a senha
-
-          if (!isPasswordValid) {
-              return res.status(400).json({ message: 'Senha incorreta.' });
-          }
-
-          // Gerar token e enviar resposta
-      } catch (compareError) {
-          console.error('Erro ao comparar a senha:', compareError);
-          res.status(500).json({ message: 'Erro no servidor ao verificar a senha.' });
-      }
-  });
-});
-
-
-// --- Middleware para autenticação via JWT ---
-
 
 app.get('/isLoggedIn', (req, res) => {
   if (req.session.user) {

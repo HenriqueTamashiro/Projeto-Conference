@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 
 const password = '123'; // A senha fornecida
-const hash = '$2a$10$pqaOOtBSqD6CY1.i.yGjlO63fV9D..95onDK0so7wIu0xS9tz40bC'; // O hash armazenado
+const hash = '$2a$10$8brsT9FoHgHbMudWk87WG.rDJxNMthgyDQ8jAY4E9gC2WyIobmi3q'; // O hash armazenado
 
 bcrypt.compare(password, hash, (err, isMatch) => {
     if (err) {

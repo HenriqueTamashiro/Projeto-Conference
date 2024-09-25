@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 const data = await response.json(); // Captura a resposta do servidor
-                console.log('Login bem-sucedido:', data);
+                console.log('Login bem-sucedido:');
                 // Redirecionar ou realizar outra ação após o login bem-sucedido
             } else {
                 console.error('Erro ao fazer login:', response.statusText);
@@ -31,9 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
-
-
 
 
   // Adiciona funcionalidade ao botão de logout
@@ -54,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (token) {
         // Se o token existe, validar com o servidor
         try {
-            const response = await fetch('/dashboard', {
+            const response = await fetch('http://34.207.139.134:3300/dashboard', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -80,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Adicionar o evento de logout
         document.getElementById('logoutButton').addEventListener('click', async () => {
             try {
-                const response = await fetch('/logout', {
+                const response = await fetch('http://34.207.139.134:3300/logout', {
                     method: 'POST',
                     credentials: 'include'
                 });

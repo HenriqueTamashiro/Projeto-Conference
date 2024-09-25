@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   if (token) {
       try {
-          const response = await fetch('/dashboard', {
+          const response = await fetch('http://34.207.139.134:3300/dashboard', {
               method: 'GET',
               headers: {
                   'Authorization': `Bearer ${token}`
