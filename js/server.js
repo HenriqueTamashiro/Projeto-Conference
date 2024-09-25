@@ -1,13 +1,14 @@
 const express = require('express');
-const mysql = require('mysql2');
+const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const session = require('express-session');
+require('dotenv').config(); // Importa e configura o dotenv
 
 const app = express();
-const JWT_SECRET = 'minha-chave-secreta';  // Definição global da chave secreta
+const JWT_SECRET = process.env.SECRET_KEY;  // Usa a chave secreta do .env
 
 // Configurar o CORS para permitir todos os domínios
 app.use(cors({
@@ -38,7 +39,7 @@ connection.connect(err => {
 
 // Configuração do middleware de sessões
 app.use(session({
-  secret: 'sua-chave-secreta',
+  secret: process.env.SECRET_KEY, // Usa a chave secreta do .env
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false }
@@ -60,8 +61,9 @@ app.post('/add-user', (req, res) => {
 });
 
 // --- Rota para buscar usuário pelo identificador e key ---
-app.post('/get-user', (req, res) => {
-  const { identificador, key_valor } = req.body;
+app.get('/get-user', (req, res) => {
+  const { identificador, key_valor } = req.query;
+  
   const selectQuery = `SELECT * FROM usuarios WHERE identificador = ? AND key_valor = ?`;
 
   connection.query(selectQuery, [identificador, key_valor], (err, resultados) => {
@@ -84,31 +86,36 @@ app.post('/get-user', (req, res) => {
 // --- Rota para logout ---
 app.post('/logout', (req, res) => {
   if (!req.session) {
-      return res.status(400).send('Sessão não existe');
+    return res.status(400).send('Sessão não existe');
   }
 
   req.session.destroy(err => {
-      if (err) {
-          console.error('Erro ao destruir a sessão:', err);
-          return res.status(500).send('Erro ao deslogar');
-      }
-      res.clearCookie('connect.sid');
-      req.session = null; // Limpa a sessão
-      res.status(200).send('Deslogado com sucesso');
+    if (err) {
+      console.error('Erro ao destruir a sessão:', err);
+      return res.status(500).send('Erro ao deslogar');
+    }
+    res.clearCookie('connect.sid');
+    req.session = null; // Limpa a sessão
+    res.status(200).send('Deslogado com sucesso');
   });
 });
 
+const authenticateToken = (req, res, next) => {
+  const token = req.headers['authorization'];
+  if (!token) return res.status(401).json({ message: 'Token não fornecido.' });
+
+  jwt.verify(token.split(' ')[1], JWT_SECRET, (err, user) => {  // Use apenas o token
+    if (err) return res.status(403).json({ message: 'Token inválido.' });
+    req.user = user;
+    next();
+  });
+};
 
 // --- Endpoint para login ---
-app.post('/login', (req, res) => {
-  console.log("Requisição recebida para /login");
-  const { username, password } = req.body;
-
-  if (!username || !password) {
-      return res.status(400).json({ message: 'Usuário e senha são obrigatórios.' });
-  }
-
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body; 
   const userCheckQuery = `SELECT * FROM autenticacao WHERE username = ?`;
+
   connection.query(userCheckQuery, [username], async (err, results) => {
       if (err) {
           console.error('Erro ao consultar o banco de dados:', err);
@@ -120,20 +127,14 @@ app.post('/login', (req, res) => {
       }
 
       const user = results[0];
-
       try {
-          const isPasswordValid = await bcrypt.compare(password, user.password);
+          const isPasswordValid = await bcrypt.compare(password, user.password); // Aqui você compara a senha
+
           if (!isPasswordValid) {
               return res.status(400).json({ message: 'Senha incorreta.' });
           }
 
-          const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, {
-              expiresIn: '1h',
-          });
-
-          req.session.username = username; // Armazena o nome de usuário na sessão
-          res.json({ success: true, token });
-
+          // Gerar token e enviar resposta
       } catch (compareError) {
           console.error('Erro ao comparar a senha:', compareError);
           res.status(500).json({ message: 'Erro no servidor ao verificar a senha.' });
@@ -141,40 +142,44 @@ app.post('/login', (req, res) => {
   });
 });
 
-// --- Middleware para autenticação via JWT ---
-const authenticateToken = (req, res, next) => {
-  const token = req.headers['authorization'];
-  if (!token) return res.status(401).json({ message: 'Token não fornecido.' });
 
-  jwt.verify(token.split(' ')[1], JWT_SECRET, (err, user) => {  // Use apenas o token
-      if (err) return res.status(403).json({ message: 'Token inválido.' });
-      req.user = user;
-      next();
-  });
-};
+// --- Middleware para autenticação via JWT ---
+
+
 app.get('/isLoggedIn', (req, res) => {
   if (req.session.user) {
-    
-      // Supondo que req.session.user contenha as informações do usuário logado
-      res.status(200).send({ loggedIn: true, username: req.session.user.username });
+    // Supondo que req.session.user contenha as informações do usuário logado
+    res.status(200).send({ loggedIn: true, username: req.session.user.username });
   } else {
-      res.status(200).send({ loggedIn: false } );
+    res.status(200).send({ loggedIn: false });
   }
 });
-console.log('Usuário LOGADO!');
 
+// Endpoint de teste para buscar todos os usuários
+// Rota para testar a conexão com o banco de dados
+app.get('/test-database', (req, res) => {
+  console.log('Rota /test-database acessada');
+
+  connection.query('SELECT * FROM usuarios', (error, results) => {
+    if (error) {
+      console.error('Erro ao conectar ao banco de dados:', error);
+      return res.status(500).send('Erro ao conectar ao banco de dados');
+    }
+
+    // Retornando todos os resultados da tabela 'usuarios'
+    res.json({
+      message: 'A conexão foi bem-sucedida!',
+      data: results
+    });
+  });
+});
 
 // --- Rota protegida: Dashboard ---
 app.get('/dashboard', authenticateToken, (req, res) => {
-  res.json({ message: `${req.user.username}`});
+  res.json({ message: `${req.user.username}` });
 });
-
 
 const porta = 3300;
 app.listen(porta, () => {
   console.log('Servidor express rodando na porta: ', porta);
 });
-
-
-
-

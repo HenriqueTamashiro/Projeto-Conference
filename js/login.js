@@ -1,32 +1,34 @@
-document.getElementById('loginButton1').addEventListener('submit', function(event) {
-    event.preventDefault();
+document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.getElementById('loginForm'); // Seleciona o formulário de login
 
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const submitButton = document.getElementById('submitButton');
-    submitButton.disabled = true;  // Desabilita o botão
-    const data = { username, password };
+    loginForm.addEventListener('submit', async (event) => {
+        event.preventDefault(); // Previne o envio padrão do formulário
 
-    fetch('/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
+        const username = document.getElementById('username').value; // Captura o valor do usuário
+        const password = document.getElementById('password').value; // Captura o valor da senha
         
-    })
-    .then(response => response.json())
-    .then(result => {
-        if (result.token) {  // Se o login foi bem-sucedido e o token foi retornado
-            localStorage.setItem('token', result.token);  // Salva o token no Local Storage
-            window.location.href = '../pages/cadastro_acessos.html';  // Redireciona para a página do painel
-        } else {
-            alert(result.message);  // Exibe a mensagem de erro retornada
+
+        try {
+            const response = await fetch('http://34.207.139.134:3300/login', {
+                method: 'POST', // Usando o método POST
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password }) // Enviando os dados
+            });
+
+            if (response.ok) {
+                const data = await response.json(); // Captura a resposta do servidor
+                console.log('Login bem-sucedido:', data);
+                // Redirecionar ou realizar outra ação após o login bem-sucedido
+            } else {
+                console.error('Erro ao fazer login:', response.statusText);
+                alert('Falha no login, verifique suas credenciais.'); // Mensagem de erro
+            }
+        } catch (error) {
+            console.error('Erro de rede:', error);
+            alert('Erro ao se conectar ao servidor.'); // Mensagem de erro
         }
-    })
-    .catch(error => {
-        console.error('Erro:', error);
-        alert('Ocorreu um erro no login. Tente novamente.');
     });
 });
 
