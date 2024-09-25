@@ -1,37 +1,35 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const loginForm = document.getElementById('loginForm'); // Seleciona o formulário de login
+document.getElementById('loginForm').addEventListener('submit', async function(event) {
+    event.preventDefault();  // Evita o recarregamento da página ao enviar o formulário
 
-    loginForm.addEventListener('submit', async (event) => {
-        event.preventDefault(); // Previne o envio padrão do formulário
+    const formData = new FormData(event.target);  // Pega os dados do formulário
+    const data = {
+        username: formData.get('username'),
+        password: formData.get('password')
+    };
 
-        const username = document.getElementById('username').value; // Captura o valor do usuário
-        const password = document.getElementById('password').value; // Captura o valor da senha
-        
+    try {
+        const response = await fetch('http://34.207.139.134:3300/login', {  // Endpoint de login
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
 
-        try {
-            const response = await fetch('http://34.207.139.134:3300/login', {
-                method: 'POST', // Usando o método POST
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password }) // Enviando os dados
-            });
+        const result = await response.json();
 
-            if (response.ok) {
-                const data = await response.json(); // Captura a resposta do servidor
-                console.log('Login bem-sucedido:');
-                // Redirecionar ou realizar outra ação após o login bem-sucedido
-            } else {
-                console.error('Erro ao fazer login:', response.statusText);
-                alert('Falha no login, verifique suas credenciais.'); // Mensagem de erro
-            }
-        } catch (error) {
-            console.error('Erro de rede:', error);
-            alert('Erro ao se conectar ao servidor.'); // Mensagem de erro
+        if (result.token) {  // Se o login foi bem-sucedido e o token foi recebido
+            localStorage.setItem('token', result.token);  // Salva o token no localStorage
+            console.log('Token recebido:', result.token);
+        } else {
+            console.error('Token não recebido:', result);
+            alert('Login falhou, tente novamente.');
         }
-    });
-});
 
+    } catch (error) {
+        console.error('Erro no login:', error);
+    }
+});
 
   // Adiciona funcionalidade ao botão de logout
   document.addEventListener('DOMContentLoaded', async () => {

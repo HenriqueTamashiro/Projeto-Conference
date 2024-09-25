@@ -1,185 +1,110 @@
-// Função para carregar o header e gerenciar a exibição dos elementos
-document.addEventListener('DOMContentLoaded', async () => {
-    // Carregar o header
-    const headerResponse = await fetch('header.html');
+// Função para carregar e atualizar o header dinamicamente
+async function loadHeader() {
+    const headerResponse = await fetch('/pages/header.html');
     const headerData = await headerResponse.text();
     document.getElementById('header-placeholder').innerHTML = headerData;
 
-    // Verificar o token
-    const token = localStorage.getItem('token'); 
-
-    // Referências aos elementos do header
+    const token = localStorage.getItem('token');
     const profileMenu = document.getElementById('profileMenu');
     const loginButton = document.getElementById('loginButton');
-    const dashboard = document.getElementById('dashboard');
-    
+    const logoutButton = document.getElementById('logoutButton');
+    const userNameDisplay = document.getElementById('userName');
+
     if (token) {
-        // Se o token existe, validar com o servidor
         try {
-            const response = await fetch('http://34.207.139.134:3300/dashboard', {
+            const response = await fetch('http://34.207.139.134:3300/isLoggedIn', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
 
-            if (!response.ok) {
+            const result = await response.json();
+
+            if (result.loggedIn) {
+                userNameDisplay.innerText = result.username;
+                profileMenu.style.display = 'block';
+                loginButton.style.display = 'none';
+                logoutButton.style.display = 'block';
+            } else {
                 throw new Error('Token inválido ou expirado.');
             }
-
-            const result = await response.json();
-            dashboard.innerText = result.message; // Exibe o nome do usuário
-            profileMenu.style.display = 'block';
-            loginButton.style.display = 'none';
 
         } catch (error) {
             console.error('Erro:', error);
             alert('Sua sessão expirou. Faça login novamente.');
-            localStorage.removeItem('token');  // Remove o token inválido
-            window.location.href = '/pages/login.html';  // Redireciona para a página de login
+            localStorage.removeItem('token');
+            window.location.href = '/pages/login.html';
         }
-
-        // Adicionar o evento de logout
-        document.getElementById('logoutButton').addEventListener('click', async () => {
-            try {
-                const response = await fetch('http://34.207.139.134:3300/logout', {
-                    method: 'POST',
-                    credentials: 'include'
-                });
-
-                if (response.ok) {
-                    localStorage.removeItem('token'); // Remove o token
-                    window.location.href = '/pages/login.html'; // Redireciona para o login
-                } else {
-                    alert('Erro ao deslogar. Tente novamente.');
-                }
-            } catch (error) {
-                console.error('Erro:', error);
-            }
-        });
-
     } else {
-        // Caso não tenha token, mostrar o botão de login e ocultar o menu
         profileMenu.style.display = 'none';
         loginButton.style.display = 'block';
+        logoutButton.style.display = 'none';
     }
-});
+
+    // Adicionar evento de logout
+    logoutButton.addEventListener('click', async () => {
+        try {
+            const response = await fetch('http://34.207.139.134:3300/logout', {
+                method: 'POST',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                localStorage.removeItem('token');
+                window.location.href = '/pages/login.html';
+            } else {
+                alert('Erro ao deslogar. Tente novamente.');
+            }
+        } catch (error) {
+            console.error('Erro ao deslogar:', error);
+        }
+    });
+}
+
+// Chama o loadHeader quando a página é carregada
 document.addEventListener('DOMContentLoaded', async () => {
-    const token = localStorage.getItem('token');  // Verifica se o token existe
-    if (!token) {
-        alert('Você precisa estar logado para acessar esta página ou não possui acesso ');
-        
-        window.location.href = '/pages/login.html';  // Redireciona para a página de login
-        return;  // Interrompe a execução
-    }
+    await loadHeader();
+});
+
+// Função de login
+document.getElementById('loginForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const data = {
+        username: formData.get('username'),
+        password: formData.get('password')
+    };
 
     try {
-        // Caso o token exista, verificar sua validade com o servidor
-        const response = await fetch('http://34.207.139.134:3300/dashboard', {
-            method: 'GET',
+        const response = await fetch('http://34.207.139.134:3300/login', {
+            method: 'POST',
             headers: {
-                'Authorization': `Bearer ${token}`  // Envia o token JWT para validação
-            }
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         });
 
-        if (!response.ok) {
-            throw new Error('Token inválido ou expirado.');
+        const result = await response.json();
+
+        if (result.token) {
+            localStorage.setItem('token', result.token);
+            console.log('Token recebido:', result.token);
+
+            // Atualizar o header após o login bem-sucedido
+            await loadHeader();
+        } else {
+            console.error('Token não recebido:', result);
+            alert('Login falhou, tente novamente.');
         }
 
-        const result = await response.json();
-        // Exibe a mensagem do servidor no elemento HTML
-        document.getElementById('dashboard').innerText = result.message;
-
     } catch (error) {
-        console.error('Erro:', error);
-        alert('Sua sessão expirou. Faça login novamente.');
-        localStorage.removeItem('token');  // Remove o token inválido
-        window.location.href = '/pages/login.html';  // Redireciona para a página de login
+        console.error('Erro no login:', error);
     }
 });
 
-
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    fetch('http://34.207.139.134:3300/dashboard', {
-        method: 'GET',
-        headers: {
-            'Authorization': localStorage.getItem('token')  // Envia o token JWT
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Erro ao carregar o dashboard.');
-        }
-        return response.json();
-    })
-    .then(result => {
-        // Exibe a mensagem do servidor no elemento HTML
-        document.getElementById('dashboard').innerText = result.message;
-    })
-    .catch(error => {
-        console.error('Erro:', error);
-        document.getElementById('dashboard').innerText = 'Falha ao carregar o dashboard.';
-    });
-  });
-document.getElementById('userForm').addEventListener('submit', function(event) {
-  event.preventDefault();
-  
-  const formData = new FormData(event.target);
-  const data = {
-      nome: formData.get('nome'),
-      cliente: formData.get('cliente'),
-      identificador: formData.get('identificador'),
-      key_valor: formData.get('key'),
-      acessos: formData.get('acessos') 
-  };
-
-  fetch('/add-user', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data) 
-  })
-
-  .then(response => response.text())
-  .then(result => {
-      console.log(result);
-      alert('Dados enviados com sucesso!');
-  })
-
-  .catch(error => {
-      console.error('Erro ao enviar dados:', error);
-      alert('Erro ao enviar dados.');
-  });
-
-  fetch('http://34.207.139.134:3300/acessos')
-    .then(response => response.json()) // Converte a resposta para JSON
-        .then(dataGet => {
-            // Seleciona o corpo da tabela onde os dados serão inseridos
-            const displayContainer = document.querySelector('.container');
-            displayContainer.innerHTML = '';
-
-            dataGet.forEach(user => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                        <td>${user.id}</td>
-                        <td>${user.nome}</td>
-                        <td>${user.cliente}</td>
-                        <td>${user.identificador}</td>
-                        <td>${user.key_valor}</td>
-                        <td>${user.acessos}</td>
-                    `;
-                    displayContainer.appendChild(row);
-            });
-    });
-
-});
-
-
-
-// Logout Handler
+// Função de logout
 document.getElementById('logoutButton').addEventListener('click', async () => {
     try {
         const response = await fetch('http://34.207.139.134:3300/logout', {
@@ -188,13 +113,14 @@ document.getElementById('logoutButton').addEventListener('click', async () => {
         });
 
         if (response.ok) {
-            localStorage.removeItem('token'); // Remove o token
-            window.location.href = '/pages/login.html'; // Redireciona para o login
+            localStorage.removeItem('token');
+            // Atualizar o header após o logout
+            await loadHeader();
+            window.location.href = '/pages/login.html';
         } else {
             alert('Erro ao deslogar. Tente novamente.');
         }
     } catch (error) {
-        console.error('Erro:', error);
+        console.error('Erro ao deslogar:', error);
     }
 });
-
