@@ -7,11 +7,6 @@ const jwt = require('jsonwebtoken');
 const session = require('express-session');
 require('dotenv').config(); // Importa e configura o dotenv
 
-res.cookie('token', token, {
-  httpOnly: true, 
-  secure: true,   
-  maxAge: 3600000  
-});
 
 const app = express();
 const JWT_SECRET = process.env.SECRET_KEY;  // Usa a chave secreta do .env
@@ -34,8 +29,6 @@ const connection = mysql.createConnection({
   database: 'users',
   port: porta_db
 });
-
-
 
 
 async function findUserByUsername(username) {
@@ -69,8 +62,24 @@ app.use(session({
   }
 }));
 
+
+
+
+const authenticateToken = (req, res, next) => {
+  const token = req.headers['authorization']?.split(' ')[1]; // Obtém o token do cabeçalho Authorization
+
+  if (!token) return res.status(401).send({ message: 'Token não fornecido' });
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+      if (err) return res.status(403).send({ message: 'Token inválido ou expirado' });
+      
+      req.user = user; // Armazena os dados do usuário decodificados
+      next(); // Chama o próximo middleware ou a rota
+  });
+};
+
 // --- Rota para inserir um novo usuário no banco ---
-app.post('/add-user', (req, res) => {
+app.post('/add-user', authenticateToken,(req, res) => {
   const { nome, cliente, identificador, key_valor, acessos } = req.body;
   const insertQuery = `INSERT INTO usuarios (nome, cliente, identificador, key_valor, acessos) VALUES (?, ?, ?, ?, ?)`;
 
@@ -141,18 +150,6 @@ app.post('/login', async (req, res) => {
 
 
 
-const authenticateToken = (req, res, next) => {
-    const token = req.headers['authorization']?.split(' ')[1]; // Obtém o token do cabeçalho Authorization
-
-    if (!token) return res.status(401).send({ message: 'Token não fornecido' });
-
-    jwt.verify(token, JWT_SECRET, (err, user) => {
-        if (err) return res.status(403).send({ message: 'Token inválido ou expirado' });
-        
-        req.user = user; // Armazena os dados do usuário decodificados
-        next(); // Chama o próximo middleware ou a rota
-    });
-};
 app.get('/isLoggedIn', authenticateToken, (req, res) => {
   // Se o token for válido, o middleware `authenticateToken` permitirá a passagem aqui.
   res.status(200).send({ loggedIn: true, username: req.user.username });

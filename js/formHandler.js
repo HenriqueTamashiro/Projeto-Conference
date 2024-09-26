@@ -34,7 +34,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('Erro:', error);
             alert('Sua sessão expirou. Faça login novamente.');
             localStorage.removeItem('token');
-            window.location.href = '/pages/login.html';
+            window.location.replace('/pages/login.html');
+
            
         }
     } else {
@@ -54,3 +55,33 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
+document.getElementById('userForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const token = localStorage.getItem('token');
+    const formData = new FormData(event.target);
+    const data = {
+        nome: formData.get('nome'),
+        cliente: formData.get('cliente'),
+        identificador: formData.get('identificador'),
+        key_valor: formData.get('key'),
+        acessos: formData.get('acessos')
+    };
+    console.log('teste')
+    fetch('http://34.207.139.134:3300/add-user', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)  // Usar o objeto `data` com os valores do formulário
+    })
+    .then(response => response.text())
+    .then(result => {
+        console.log(result);
+        alert('Dados enviados com sucesso!');
+    })
+    .catch(error => {
+        console.error('Erro ao enviar dados:', error);
+        alert('Erro ao enviar dados.');
+    });
+  });
