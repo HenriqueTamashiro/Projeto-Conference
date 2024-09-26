@@ -63,28 +63,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Adicionar o evento de logout
-        document.getElementById('logoutButton').addEventListener('click', async () => {
-            try {
-                const response = await fetch('http://34.207.139.134:3300/logout', {
-                    method: 'POST',
-                    credentials: 'include'
-                });
-
-                if (response.ok) {
-                    localStorage.removeItem('token'); // Remove o token
-                    window.location.href = '../pages/login.html'; // Redireciona para o login
-                } else {
-                    alert('Erro ao deslogar. Tente novamente.');
-                }
-            } catch (error) {
-                console.error('Erro:', error);
-            }
-        });
-
-    } else {
-        // Caso não tenha token, mostrar o botão de login e ocultar o menu
-        profileMenu.style.display = 'none';
-        loginButton.style.display = 'block';
     }
 });
 document.getElementById('loginForm').addEventListener('submit', async function(event) {
