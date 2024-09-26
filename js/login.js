@@ -1,37 +1,27 @@
-document.getElementById('loginForm').addEventListener('submit', async function(event) {
-    event.preventDefault();  // Evita o recarregamento da página ao enviar o formulário
-
-    const formData = new FormData(event.target);  // Pega os dados do formulário
-    const data = {
-        username: formData.get('username'),
-        password: formData.get('password')
-    };
-
-    try {
-        const response = await fetch('http://34.207.139.134:3300/login', {  // Endpoint de login
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-
-        const result = await response.json();
-
-        if (result.token) {  // Se o login foi bem-sucedido e o token foi recebido
-            localStorage.setItem('token', result.token);  // Salva o token no localStorage
-            console.log('Token recebido:', result.token);
-        } else {
-            console.error('Token não recebido:', result);
-            alert('Login falhou, tente novamente.');
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('http://34.207.139.134:3300/dashboard', {
+        method: 'GET',
+        headers: {
+            'Authorization': localStorage.getItem('token')  // Envia o token JWT
         }
-
-    } catch (error) {
-        console.error('Erro no login:', error);
-    }
-});
-
-  // Adiciona funcionalidade ao botão de logout
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erro ao carregar o dashboard.');
+        }
+        return response.json();
+    })
+    .then(result => {
+        // Exibe a mensagem do servidor no elemento HTML
+        document.getElementById('dashboard').innerText = result.message;
+        
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        document.getElementById('dashboard').innerText = 'Falha ao carregar o dashboard.';
+    });
+  });
+  
   document.addEventListener('DOMContentLoaded', async () => {
     // Carregar o header
     const headerResponse = await fetch('../pages/header.html');
@@ -95,5 +85,42 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         // Caso não tenha token, mostrar o botão de login e ocultar o menu
         profileMenu.style.display = 'none';
         loginButton.style.display = 'block';
+    }
+});
+document.getElementById('loginForm').addEventListener('submit', async function(event) {
+    event.preventDefault();  // Evita o recarregamento da página ao enviar o formulário
+
+    const formData = new FormData(event.target);  // Pega os dados do formulário
+    const data = {
+        username: formData.get('username'),
+        password: formData.get('password')
+    };
+
+
+    
+    try {
+        const response = await fetch('http://34.207.139.134:3300/login', {  // Endpoint de login
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (result.token) {  // Se o login foi bem-sucedido e o token foi recebido
+            localStorage.setItem('token', result.token);  // Salva o token no localStorage
+            window.location.href = '/pages/cadastro_acessos.html';
+            console.log(result)
+            
+            
+        } else {
+            console.error('Token não recebido:', result);
+            alert('Login falhou, tente novamente.');
+        }
+
+    } catch (error) {
+        console.error('Erro no login:', error);
     }
 });

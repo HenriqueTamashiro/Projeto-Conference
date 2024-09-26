@@ -7,14 +7,20 @@ const jwt = require('jsonwebtoken');
 const session = require('express-session');
 require('dotenv').config(); // Importa e configura o dotenv
 
+res.cookie('token', token, {
+  httpOnly: true, 
+  secure: true,   
+  maxAge: 3600000  
+});
 
 const app = express();
 const JWT_SECRET = process.env.SECRET_KEY;  // Usa a chave secreta do .env
 
 // Configurar o CORS para permitir todos os domínios
 app.use(cors({
-  origin: '*',
-  credentials: true
+  origin: 'http://34.207.139.134',
+  methods: ['GET', 'POST'], // Especifica os métodos permitidos
+  credentials: false
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -58,7 +64,9 @@ app.use(session({
   secret: process.env.SECRET_KEY, // Usa a chave secreta do .env
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false }
+  cookie: { secure: false, 
+            maxAge: 1000 * 60 * 60 
+  }
 }));
 
 // --- Rota para inserir um novo usuário no banco ---
@@ -99,23 +107,6 @@ app.get('/get-user', (req, res) => {
 });
 
 
-// --- Rota para logout ---
-app.post('/logout', (req, res) => {
-  if (!req.session) {
-    return res.status(400).send('Sessão não existe');
-  }
-
-  req.session.destroy(err => {
-    if (err) {
-      console.error('Erro ao destruir a sessão:', err);
-      return res.status(500).send('Erro ao deslogar');
-    }
-    res.clearCookie('connect.sid');
-    req.session = null; // Limpa a sessão
-    res.status(200).send('Deslogado com sucesso');
-  });
-});
-
 // --- Endpoint para login ---
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
@@ -133,37 +124,43 @@ app.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Senha incorreta.' });
   }
 
+ console.log('Requisião de login efetuada e aprovada ');
+  req.session.user = {
+    id: user.id,
+    username: user.username
+  };
+  console.log(`Sessão criada: ${req.session.user} `);
   // Gerar um token JWT
   const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, {
       expiresIn: '1h' // O token expira em 1 hora
   });
+  // Retornar a resposta com o token e a mensagem de login bem-sucedido
+  return res.status(200).json({ message: 'Login bem-sucedido!', token, user: req.session.user });
 
-  // Retornar a resposta com o token
-  return res.status(200).json({ message: 'Login bem-sucedido!', token });
 });
 
 
 
-// --- Middleware para autenticação via JWT ---
 const authenticateToken = (req, res, next) => {
-  const token = req.headers['authorization'];
-  if (!token) return res.status(401).json({ message: 'Token não fornecido.' });
+    const token = req.headers['authorization']?.split(' ')[1]; // Obtém o token do cabeçalho Authorization
 
-  jwt.verify(token.split(' ')[1], JWT_SECRET, (err, user) => {  // Use apenas o token
-    if (err) return res.status(403).json({ message: 'Token inválido.' });
-    req.user = user;
-    next();
-  });
+    if (!token) return res.status(401).send({ message: 'Token não fornecido' });
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) return res.status(403).send({ message: 'Token inválido ou expirado' });
+        
+        req.user = user; // Armazena os dados do usuário decodificados
+        next(); // Chama o próximo middleware ou a rota
+    });
 };
+app.get('/isLoggedIn', authenticateToken, (req, res) => {
+  // Se o token for válido, o middleware `authenticateToken` permitirá a passagem aqui.
+  res.status(200).send({ loggedIn: true, username: req.user.username });
+  console.log('Sessão encontrada:', req.user);
 
-app.get('/isLoggedIn', (req, res) => {
-  if (req.session.user) {
-    // Supondo que req.session.user contenha as informações do usuário logado
-    res.status(200).send({ loggedIn: true, username: req.session.user.username });
-  } else {
-    res.status(200).send({ loggedIn: false });
-  }
 });
+
+
 
 // Endpoint de teste para buscar todos os usuários
 // Rota para testar a conexão com o banco de dados
