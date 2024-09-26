@@ -87,27 +87,5 @@ document.addEventListener('DOMContentLoaded', async () => {
           localStorage.removeItem('token');
           window.location.href = 'login.html';
       }
-
-      document.getElementById('logoutButton').addEventListener('click', async () => {
-          try {
-              const response = await fetch('/logout', {
-                  method: 'POST',
-                  credentials: 'include'
-              });
-
-              if (response.ok) {
-                  localStorage.removeItem('token');
-                  window.location.href = '/pages/login.html';
-              } else {
-                  alert('Erro ao deslogar. Tente novamente.');
-              }
-          } catch (error) {
-              console.error('Erro:', error);
-          }
-      });
-
-  } else {
-      profileMenu.style.display = 'none';
-      loginButton.style.display = 'block';
-  }
-});
+    }
+  });
