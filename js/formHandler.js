@@ -9,10 +9,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loginButton = document.getElementById('loginButton');
     const logoutButton = document.getElementById('logoutButton');
     const dashboard = document.getElementById('dashboard');
-
+    const site = 'https://conference.cbyk.com/';
     if (token) {
         try {
-            const response = await fetch('http://34.207.139.134:3300/isLoggedIn', {
+            const response = await fetch(`${site}/isLoggedIn`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -67,7 +67,7 @@ document.getElementById('userForm').addEventListener('submit',async function(eve
         acessos: formData.get('acessos')
     };
     try{
-    const responseAdd = await fetch('http://34.207.139.134:3300/add-user', {
+    const responseAdd = await fetch('https://conference.cbyk.com/add-user', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,

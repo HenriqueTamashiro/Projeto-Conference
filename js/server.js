@@ -13,7 +13,7 @@ const JWT_SECRET = process.env.SECRET_KEY;  // Usa a chave secreta do .env
 
 // Configurar o CORS para permitir todos os domínios
 app.use(cors({
-  origin: 'http://34.207.139.134',
+  origin: 'https://conference.cbyk.com',
   methods: ['GET', 'POST'], // Especifica os métodos permitidos
   credentials: false
 }));
@@ -161,7 +161,7 @@ app.get('/isLoggedIn', authenticateToken, (req, res) => {
 
 // Endpoint de teste para buscar todos os usuários
 // Rota para testar a conexão com o banco de dados
-app.get('/test-database', (req, res) => {
+app.get('/test-database', authenticateToken,(req, res) => {
   console.log('Rota /test-database acessada');
 
   connection.query('SELECT * FROM usuarios', (error, results) => {

@@ -8,10 +8,28 @@
  --margem:0;
  --altura:6%;
 }
+.header {
+    border: 1px solid #ffffff1e;
+    display: flex; /* Corrigir para display: flex */
+    justify-content: space-between; /* Alinha o menu da esquerda e da direita */
+    background-color: rgba(54, 53, 53, 0.459);
+    height: 56px;
+    padding: 0 10px; /* Espaçamento horizontal */
+    align-items: center;
+    width: 100%;
+    position: fixed; /* Fixa o header no topo da página */
+    top: 0;
+    left: 0;  
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.418);
+    z-index: 1000; /* Garante que o header esteja acima do conteúdo */
+}
+
+
+
 body {
     background: linear-gradient(to right,#030007,
     #03070c, #0e0611,#0a0711);
-    
+    padding-top: 56px;
     color: aliceblue;
     margin:0;
     font-family: "Oswald", sans-serif;
@@ -26,6 +44,7 @@ body {
     height: 50px;
     position: fixed;
     top: 5px;
+    right: 49%;
 }
 .container{
 
@@ -110,20 +129,6 @@ outline: 2px solid  var(--primary-color2);
 
   /*MENU DROPDOWN DE LOGOUT */
 
-.header {
-    border: 1px solid #ffffff1e ;
-    display: flex;
-    justify-content: space-between; /* Alinha o menu da esquerda e da direita */
-    background-color:rgba(54, 53, 53, 0.459);
-    height: 56px;
-    padding: 0 20px; /* Espaçamento horizontal */
-    align-items: center;
-    width: 100%;
-    position: fixed; 
-    top: 0; 
-    left: 0;  
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.418);
-}
 
 /* Estilo comum dos dropdowns */
 .dropdown-content-left, .dropdown-content-right {
@@ -186,6 +191,8 @@ outline: 2px solid  var(--primary-color2);
     position: relative;
     display: flex;
     align-items: center;
+    left:0.5%;
+    text-decoration: none;
     
 }
 #menu-left-button, #dashboard{

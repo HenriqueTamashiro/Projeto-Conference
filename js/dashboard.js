@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-  fetch('http://34.207.139.134/dashboard', {
+  fetch('https://conference.cbyk.com/dashboard', {
       method: 'GET',
       headers: {
           'Authorization': localStorage.getItem('token')  // Envia o token JWT
