@@ -57,7 +57,7 @@ app.use(session({
   secret: process.env.SECRET_KEY, // Usa a chave secreta do .env
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false, 
+  cookie: { secure: true, 
             maxAge: 1000 * 60 * 60 
   }
 }));
