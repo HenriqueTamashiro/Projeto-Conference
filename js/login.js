@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (token) {
         // Se o token existe, validar com o servidor
         try {
-            const response = await fetch('/dashboard', {
+            const response = await fetch('https://conference.cbyk.com/dashboard', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -77,7 +77,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
     
     try {
-        const response = await fetch('conference.cbyk.com/login', {  // Endpoint de login
+        const response = await fetch('https://conference.cbyk.com/login', {  // Endpoint de login
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -89,7 +89,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
         if (result.token) {  // Se o login foi bem-sucedido e o token foi recebido
             localStorage.setItem('token', result.token);  // Salva o token no localStorage
-            window.location.href = '/pages/cadastro_acessos.html';
+         
             console.log(result)
             
             
@@ -100,5 +100,22 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
     } catch (error) {
         console.error('Erro no login:', error);
+    }
+});
+document.getElementById('logoutButton').addEventListener('click', async () => {
+    try {
+        const response = await fetch('http://127.0.0.1:3300/logout', {
+            method: 'POST',
+            credentials: 'include' // Inclui cookies na requisição
+        });
+
+        if (response.ok) {
+            console.log('Logout bem-sucedido!');
+            window.location.href = '/login'; // Redireciona para a página de login
+        } else {
+            console.error('Erro ao deslogar:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Erro ao deslogar:', error);
     }
 });

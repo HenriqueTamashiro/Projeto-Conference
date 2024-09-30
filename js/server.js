@@ -3,13 +3,14 @@ const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
+const path = require('path');
 const jwt = require('jsonwebtoken');
 const session = require('express-session');
 require('dotenv').config(); // Importa e configura o dotenv
-
-
-const app = express();
 const JWT_SECRET = process.env.SECRET_KEY;  // Usa a chave secreta do .env
+const app = express();
+
+
 
 // Configurar o CORS para permitir todos os domínios
 app.use(cors({
@@ -63,6 +64,7 @@ app.use(session({
 }));
 
 
+app.use(express.static(path.join(__dirname, '..')));
 
 
 const authenticateToken = (req, res, next) => {
@@ -182,8 +184,9 @@ app.get('/test-database', authenticateToken,(req, res) => {
 app.get('/dashboard', authenticateToken, (req, res) => {
   res.json({ message: `${req.user.username}` });
 });
+const PORT = 3300;
 
-const porta = 3300;
-app.listen(porta, () => {
-  console.log('Servidor express rodando na porta: ', porta);
+
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
 });
