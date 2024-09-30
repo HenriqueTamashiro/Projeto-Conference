@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    fetch('http://34.207.139.134:3300/dashboard', {
+    fetch('/dashboard', {
         method: 'GET',
         headers: {
             'Authorization': localStorage.getItem('token')  // Envia o token JWT
@@ -77,7 +77,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
     
     try {
-        const response = await fetch('http://34.207.139.134:3300/login', {  // Endpoint de login
+        const response = await fetch('conference.cbyk.com/login', {  // Endpoint de login
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
