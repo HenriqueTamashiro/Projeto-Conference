@@ -9,16 +9,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loginButton = document.getElementById('loginButton');
     const logoutButton = document.getElementById('logoutButton');
     const dashboard = document.getElementById('dashboard');
-    const site = 'https://conference.cbyk.com/';
+  
     if (token) {
         try {
-            const response = await fetch(`${site}/isLoggedIn`, {
+            const response = await fetch('/dashboard', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
-
             const result = await response.json();
          
             if (response.ok) {
@@ -35,7 +34,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             alert('Sua sessão expirou. Faça login novamente.');
             localStorage.removeItem('token');
             window.location.replace('/pages/login.html');
-
            
         }
     } else {
@@ -59,6 +57,7 @@ document.getElementById('userForm').addEventListener('submit',async function(eve
     event.preventDefault();
     const token = localStorage.getItem('token');
     const formData = new FormData(event.target);
+    const form = document.querySelector('.form');
     const data = {
         nome: formData.get('nome'),
         cliente: formData.get('cliente'),
@@ -78,12 +77,56 @@ document.getElementById('userForm').addEventListener('submit',async function(eve
 
     if (responseAdd.status === 403){ 
         alert('Necessário estar logado');
-        } else {
-            
-             alert(`Usuário adicionado com sucesso:`)
+        } 
+
+        else if (responseAdd.status === 400){ 
+            alert('Key já existente');
+            }
+            else if (responseAdd.status === 200){ 
+                alert('Dados adicionados!');
+                form.reset();
+                }
+    
+        } catch (error) {
+            alert(`Usuário adicionado com sucesso:`)
+            console.error('Erro na requisição:', error);
         }
 
+
+    });
+
+    document.getElementById('randomKey').addEventListener('click', async function(event) {
+        event.preventDefault(); // Evita o comportamento padrão do botão de submissão do formulário
+        const token = localStorage.getItem('token');
+        try {
+            // Faz uma requisição para a rota /generate-key para obter a chave aleatória
+            const response = await fetch('/generate-key', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                   'Authorization': `Bearer ${token}`
+                }
+            });
+
+            // Verifica se a requisição foi bem-sucedida
+            if (!response.ok) {
+                throw new Error('Erro ao gerar a chave');
+            }
+
+            // Extrai a chave da resposta JSON
+            const data = await response.json();
+      
+            // Atualiza o elemento que exibe a chave
+            const keyRandomElement = document.getElementById('randomKey');
+            if (keyRandomElement.value) {
+                return;
+            }
+
+            keyRandomElement.value = data.key;
+
+           
+
         } catch (error) {
-            console.error('Erro na requisição:', error);
+            console.error('Erro ao gerar a chave:', error);
         }
     });

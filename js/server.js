@@ -80,18 +80,34 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// --- Rota para inserir um novo usuário no banco ---
-app.post('/add-user', authenticateToken,(req, res) => {
+app.post('/add-user', authenticateToken, (req, res) => {
   const { nome, cliente, identificador, key_valor, acessos } = req.body;
-  const insertQuery = `INSERT INTO usuarios (nome, cliente, identificador, key_valor, acessos) VALUES (?, ?, ?, ?, ?)`;
 
-  connection.query(insertQuery, [nome, cliente, identificador, key_valor, acessos], (err, result) => {
+  // Verifica se a key_valor já existe no banco de dados
+  const checkKeyQuery = 'SELECT * FROM usuarios WHERE key_valor = ?';
+
+  connection.query(checkKeyQuery, [key_valor], (err, results) => {
     if (err) {
-      console.error('Erro ao inserir dados:', err);
-      return res.status(500).send('Erro ao inserir dados');
+      console.error('Erro ao verificar key_valor:', err);
+      return res.status(500).send('Erro ao verificar key_valor');
     }
-    console.log('Dados inseridos com sucesso!', result.insertId);
-    res.send('Dados inseridos com sucesso!');
+
+    if (results.length > 0) {
+      // Se a key_valor já existe, retorna um erro
+      return res.status(400).send('key_valor já existe no banco de dados');
+    }
+
+    // Se a key_valor não existe, insere os dados no banco de dados
+    const insertQuery = `INSERT INTO usuarios (nome, cliente, identificador, key_valor, acessos) VALUES (?, ?, ?, ?, ?)`;
+
+    connection.query(insertQuery, [nome, cliente, identificador, key_valor, acessos], (err, result) => {
+      if (err) {
+        console.error('Erro ao inserir dados:', err);
+        return res.status(500).send('Erro ao inserir dados');
+      }
+      console.log('Dados inseridos com sucesso!', result.insertId);
+      res.send('Dados inseridos com sucesso!');
+    });
   });
 });
 
@@ -152,12 +168,45 @@ app.post('/login', async (req, res) => {
 
 
 
-app.get('/isLoggedIn', authenticateToken, (req, res) => {
-  // Se o token for válido, o middleware `authenticateToken` permitirá a passagem aqui.
-  res.status(200).send({ loggedIn: true, username: req.user.username });
-  console.log('Sessão encontrada:', req.user);
+// Supondo que você esteja usando Express.js
+app.post('/generate-key', authenticateToken, (req, res) => {
+  // Função para gerar uma chave aleatória com letras, números e caracteres especiais
+  const gerarChaveAleatoria = (tamanho) => {
+    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?'; // Conjunto de caracteres
+    let chaveAleatoria = '';
 
+    for (let i = 0; i < tamanho; i++) {
+      const indiceAleatorio = Math.floor(Math.random() * caracteres.length);
+      chaveAleatoria += caracteres[indiceAleatorio];
+    }
+
+    return chaveAleatoria;
+  };
+
+  const gerarChaveUnica = () => {
+    const chaveAleatoria = gerarChaveAleatoria(12); // Gera uma chave de 10 caracteres
+
+    // Verifica se a chave já existe no banco de dados
+    const checkKeyQuery = 'SELECT * FROM usuarios WHERE key_valor = ?';
+    connection.query(checkKeyQuery, [chaveAleatoria], (err, results) => {
+      if (err) {
+        console.error('Erro ao verificar key_valor:', err);
+        return res.status(500).send('Erro ao verificar key_valor');
+      }
+
+      if (results.length > 0) {
+        // Se a chave já existe, gera outra
+        gerarChaveUnica();
+      } else {
+        // Chave única gerada
+        res.json({ key: chaveAleatoria });
+      }
+    });
+  };
+
+  gerarChaveUnica();
 });
+
 
 
 
@@ -179,11 +228,21 @@ app.get('/test-database', authenticateToken,(req, res) => {
     });
   });
 });
+app.get('/isLoggedIn', authenticateToken, (req, res) => {
+  // Se o token for válido, o middleware `authenticateToken` permitirá a passagem aqui.
+  res.status(200).send({ loggedIn: true, username: req.user.username });
+  console.log('Sessão encontrada:', req.user);
 
+});
 // --- Rota protegida: Dashboard ---
 app.get('/dashboard', authenticateToken, (req, res) => {
-  res.json({ message: `${req.user.username}` });
+  console.log('Sessão encontrada:', req.user);
+
+  // Envie a resposta de uma só vez
+  res.status(200).json({ loggedIn: true, username: req.user.username });
 });
+
+
 const PORT = 3300;
 
 

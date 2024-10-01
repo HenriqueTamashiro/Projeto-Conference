@@ -96,6 +96,8 @@ outline: 2px solid  var(--primary-color2);
 
 .descrit {
     font-size: 13px;
+    display: flex;
+ 
 }
 
 .botao {
@@ -112,6 +114,44 @@ outline: 2px solid  var(--primary-color2);
     text-align: left;;
     max-width: 100%;
     max-height: 10%;
+}
+
+.acessosresp1{
+    width: 100%;
+    height: 50px;
+    text-align: left;;
+    resize: none;
+    background: var(--primary-color3);
+    border:1px solid #835db4;
+    border-radius: 20px;
+    
+}
+.acessosresp2{
+    width: 100%;
+    height: 150px;
+    text-align: left;;
+    resize: none;
+    background: var(--primary-color3);
+    border:1px solid #835db4;
+    border-radius: 20px;
+    
+}
+
+.tittle{
+    font-size: 55px;
+    justify-content: center;
+    display: flex;
+    background: linear-gradient(to right,#ffffff,
+    #c3daff);
+    background-clip:text;
+    -webkit-background-clip: text;
+    color: #ffffff23;
+    text-shadow: 
+                -1px -1px 0 transparent,  
+                1px -1px 0 #03000742,
+                -1px 1px 0 transparent,
+                1px 1px 0 transparent; /* Sombra para simular a borda */
+    border-bottom: 1px solid #ffffff52;
 }
 .acessosProf::placeholder {
     text-align: center; 

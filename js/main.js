@@ -6,7 +6,7 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
   const key_valor = form.querySelector('.key_input').value;
 
   // Cria a URL com parâmetros de consulta
-  const url = `http://34.207.139.134:3300/get-user?identificador=${encodeURIComponent(identificador)}&key_valor=${encodeURIComponent(key_valor)}`;
+  const url = `/get-user?identificador=${encodeURIComponent(identificador)}&key_valor=${encodeURIComponent(key_valor)}`;
  
   fetch(url, {
     method: 'GET', // Método GET
@@ -35,10 +35,10 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
     valor.forEach(user => {
       const userElement = document.createElement('div');
       userElement.innerHTML = `
-        <p><strong>Nome:</strong> ${user.nome}</p>
-        <p><strong>Cliente:</strong> ${user.cliente}</p>
-        <p><strong>Identificador:</strong> ${user.identificador}</p>
-        <p><strong>Acessos:</strong> ${user.acessos}</p>
+        <p><strong>Nome:</strong> ${user.nome}</p><br>
+        <p><strong>Cliente:</strong> ${user.cliente}</p><br>
+        <p><strong>Identificador:</strong> ${user.identificador}</p><br>
+        <p><strong>Acessos:</strong> ${user.acessos}</p><br>
         <button onclick="window.location.reload()">Voltar</button>
       `;
       resultadoDiv.appendChild(userElement);
@@ -64,7 +64,7 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
 
     if (token) {
         try {
-            const response = await fetch('http://34.207.139.134:3300/isLoggedIn', {
+            const response = await fetch('/isLoggedIn', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`

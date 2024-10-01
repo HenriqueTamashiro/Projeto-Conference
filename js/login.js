@@ -63,6 +63,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Adicionar o evento de logout
+        document.getElementById('logoutButton').addEventListener('click', async () => {
+            try {
+                    localStorage.removeItem('token'); // Remove o token do localStorage
+                    alert('Deslogado com Sucesso!');
+                    window.location.href = 'https://conference.cbyk.com/pages/login.html'; // Redireciona para a página de login
+                }
+             catch (error) {
+                console.error('Erro ao deslogar');
+                alert('Erro ao deslogar. Tente novamente.');
+                console.error('Erro:', error);
+            }
+        });
     }
 });
 document.getElementById('loginForm').addEventListener('submit', async function(event) {
@@ -89,7 +101,9 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
         if (result.token) {  // Se o login foi bem-sucedido e o token foi recebido
             localStorage.setItem('token', result.token);  // Salva o token no localStorage
-         
+            window.location.href = 'https://conference.cbyk.com/pages/cadastro_acessos.html'; // Redireciona para a página de logi
+            
+            
             console.log(result)
             
             
@@ -101,21 +115,8 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     } catch (error) {
         console.error('Erro no login:', error);
     }
-});
-document.getElementById('logoutButton').addEventListener('click', async () => {
-    try {
-        const response = await fetch('http://127.0.0.1:3300/logout', {
-            method: 'POST',
-            credentials: 'include' // Inclui cookies na requisição
-        });
 
-        if (response.ok) {
-            console.log('Logout bem-sucedido!');
-            window.location.href = '/login'; // Redireciona para a página de login
-        } else {
-            console.error('Erro ao deslogar:', response.statusText);
-        }
-    } catch (error) {
-        console.error('Erro ao deslogar:', error);
-    }
+
+    
 });
+
