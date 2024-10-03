@@ -1,3 +1,4 @@
+// Listener para o envio do formulário
 document.getElementById('userForm').addEventListener('submit', function(event) {
   event.preventDefault(); // Impede o envio padrão do formulário
 
@@ -20,29 +21,35 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
     }
     return response.json();
   })
-  .then(valor => {
+  .then(async valor => {
     console.log('Dados recebidos:', valor);
     
-    // Exibe os dados no HTML
-    const resultadoDiv = document.querySelector('.container');
-    resultadoDiv.innerHTML = ''; // Limpa os resultados anteriores
+    // Carrega o HTML adicional
+    const responseAcess = await fetch('/pages/responseAcess.html');
+    const Acess = await responseAcess.text();
     
+
     if (valor.length === 0) {
+      // Nenhum usuário encontrado
+      const resultadoDiv = document.querySelector('.container');
       resultadoDiv.innerHTML = '<p>Nenhum usuário encontrado.</p>';
       return;
     }
-    
-    valor.forEach(user => {
-      const userElement = document.createElement('div');
-      userElement.innerHTML = `
-        <p><strong>Nome:</strong> ${user.nome}</p><br>
-        <p><strong>Cliente:</strong> ${user.cliente}</p><br>
-        <p><strong>Identificador:</strong> ${user.identificador}</p><br>
-        <p><strong>Acessos:</strong> ${user.acessos}</p><br>
-        <button onclick="window.location.reload()">Voltar</button>
-      `;
-      resultadoDiv.appendChild(userElement);
-    });
+    const resultadoDiv = document.getElementById('userForm');
+    resultadoDiv.innerHTML = Acess;
+    // Preenche os campos com os dados do usuário encontrado
+    const nomeResp = document.getElementById('nomeResp');
+    const idResp = document.getElementById('idResp');
+    const keyResp = document.getElementById('keyResp');
+    const acessosResp = document.getElementById('acessosResp');
+
+    nomeResp.value = valor[0].nome;
+    idResp.value = valor[0].identificador;
+    keyResp.value = valor[0].key_valor;
+    acessosResp.value = valor[0].acessos;
+
+
+
   })
   .catch(error => {
     console.error('Erro:', error);
@@ -51,57 +58,53 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
   });
 });
 
-  document.addEventListener('DOMContentLoaded', async () => {
-    const headerResponse = await fetch('/pages/header.html');
-    const headerData = await headerResponse.text();
-    document.getElementById('header-placeholder').innerHTML = headerData;
+// Listener para carregar o header após o DOM estar pronto
+document.addEventListener('DOMContentLoaded', async () => {
+  const headerResponse = await fetch('/pages/header.html');
+  const headerData = await headerResponse.text();
+  document.getElementById('header-placeholder').innerHTML = headerData;
 
-    const token = localStorage.getItem('token');
-    const profileMenu = document.getElementById('profileMenu');
-    const loginButton = document.getElementById('loginButton');
-    const logoutButton = document.getElementById('logoutButton');
-    const dashboard = document.getElementById('dashboard');
+  const token = localStorage.getItem('token');
+  const profileMenu = document.getElementById('profileMenu');
+  const loginButton = document.getElementById('loginButton');
+  const logoutButton = document.getElementById('logoutButton');
+  const dashboard = document.getElementById('dashboard');
 
-    if (token) {
-        try {
-            const response = await fetch('/isLoggedIn', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            const result = await response.json();
-         
-            if (response.ok) {
-                dashboard.innerText = result.username;
-                profileMenu.style.display = 'block';
-                loginButton.style.display = 'none';
-                logoutButton.style.display = 'block';
-            } else {
-                throw new Error('Token inválido ou expirado.');
-            }
-
-        } catch (error) {
-            console.error('Erro:', error);
-            alert('Sua sessão expirou. Faça login novamente.');
-            localStorage.removeItem('token');
-            window.location.replace('/pages/login.html');
-
-           
+  if (token) {
+    try {
+      const response = await fetch('/isLoggedIn', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
         }
-    } else {
-        profileMenu.style.display = 'none';
-        loginButton.style.display = 'block';
-        logoutButton.style.display = 'none';
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        dashboard.innerText = result.username;
+        profileMenu.style.display = 'block';
+        loginButton.style.display = 'none';
+        logoutButton.style.display = 'block';
+      } else {
+        throw new Error('Token inválido ou expirado.');
+      }
+
+    } catch (error) {
+      console.error('Erro:', error);
+      alert('Sua sessão expirou. Faça login novamente.');
+      localStorage.removeItem('token');
+      window.location.replace('/pages/login.html');
     }
+  } else {
+    profileMenu.style.display = 'none';
+    loginButton.style.display = 'block';
+    logoutButton.style.display = 'none';
+  }
 
-
-    // Adicionar evento de logout
-    logoutButton.addEventListener('click', async () => {
-
-                localStorage.removeItem('token');
-                window.location.href = '/pages/login.html';
-
-    });
+  // Evento de logout
+  logoutButton.addEventListener('click', () => {
+    localStorage.removeItem('token');
+    window.location.href = '/pages/login.html';
+  });
 });

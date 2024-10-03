@@ -50,11 +50,12 @@ body {
 
     border: 1px solid #ffffff1e ;
     max-width: 640px;
-    margin: 12% auto;
+    margin: 8% auto;
     background: var(--primary-color3);
     padding: 1% 2%;
     border-radius: 40px;    
 }
+
 form input, form label, form button {
     display: block;
     width: 100%;
@@ -97,7 +98,7 @@ outline: 2px solid  var(--primary-color2);
 .descrit {
     font-size: 13px;
     display: flex;
- 
+    margin-bottom: 5px;
 }
 
 .botao {
@@ -122,7 +123,7 @@ outline: 2px solid  var(--primary-color2);
     text-align: left;;
     resize: none;
     background: var(--primary-color3);
-    border:1px solid #835db4;
+    border:1px solid #ffffff9d;
     border-radius: 20px;
     
 }
@@ -132,7 +133,7 @@ outline: 2px solid  var(--primary-color2);
     text-align: left;;
     resize: none;
     background: var(--primary-color3);
-    border:1px solid #835db4;
+    border:1px solid #ffffff9d;
     border-radius: 20px;
     
 }
@@ -152,6 +153,8 @@ outline: 2px solid  var(--primary-color2);
                 -1px 1px 0 transparent,
                 1px 1px 0 transparent; /* Sombra para simular a borda */
     border-bottom: 1px solid #ffffff52;
+    margin-bottom: 50px;
+    padding: 20px;
 }
 .acessosProf::placeholder {
     text-align: center; 
@@ -296,4 +299,11 @@ outline: 2px solid  var(--primary-color2);
     border: none;
     cursor: pointer;
     white-space: nowrap; /* Impede quebra de linha no nome */
+}
+
+textarea {
+    color: aliceblue !important; /* Força a cor */
+    font-size: 20px;
+    padding: 10px;
+    background-color: #333; /* Se necessário, ajuste a cor de fundo */
 }
