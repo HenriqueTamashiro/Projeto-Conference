@@ -109,3 +109,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 });
 
+// Seleciona o elemento hover e o popup
+const hoverElement = document.querySelector('.id_input');
+const popup = document.querySelector('.pop');
+
+// Mostra o popup ao passar o mouse por cima
+hoverElement.addEventListener('mouseover', () => {
+    popup.classList.add('show');
+});
+
+// Esconde o popup ao remover o mouse de cima
+hoverElement.addEventListener('mouseout', () => {
+    popup.classList.remove('show');
+});

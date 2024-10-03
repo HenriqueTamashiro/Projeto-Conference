@@ -13,7 +13,7 @@
 
   <section class="container">
     <div id="response-placeholder"></div>
-
+    <div id="popUp-placeholder"></div>
 
     <form class="form" id="userForm" action="">
       <h1>Formulário para Liberação de Acesso CBYK</h1>
@@ -29,9 +29,11 @@
       <span class="descrit">Onde está alocado.</span>
       <input type="text" class="cliente" id="Cliente" placeholder="Cliente">
 
+      
       <label for="Input-id">Identificador</label>
       <span class="descrit">Service tag (Etiqueta preta) ou Patrimônio.</span>
       <input type="text" class="id_input" id="Input-id" placeholder="Identificador">
+    
 
       <label for="Key-valor">Key</label>
       <span class="descrit">Sequências de números recebido juntamente de seu equipamento.</span>
@@ -39,9 +41,26 @@
 
         <br><button>Enviar</button></br>
     </form>
-
+   
     <div id="content"></div> <!-- Área para carregar o conteúdo -->
   </section>
+  
+  <section class="pop">
+    <h2>O que é Service Tag ou Patrimônio?</h2>
+    <span class="descritivo">São identificadores únicos de cada equipamento.</span>
+     <div class="box1">
+         <p class="tittleTip1">SERVICE TAG</p>
+         <img class='servtag' src="./assets/imgs/st.jpeg">
+         </div>
+         <p>Utilize apenas a sequencia de números e letras após o "ST"!</p>
+        
+         <div class="box2">
+             <p class="tittleTip2">Patrimônio</p> 
+             <img src="./assets/imgs//patri.jpg">
+         </div>
+         <p>Utilize os números após as sequencias de 0! </p>
+
+ </section>
   <script src="./js/main.js"></script>
 </body>
 </html>
