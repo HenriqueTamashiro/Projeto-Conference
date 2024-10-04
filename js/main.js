@@ -109,16 +109,30 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 });
 
-// Seleciona o elemento hover e o popup
-const hoverElement = document.querySelector('.id_input');
+const hoverElement = document.querySelector('.help');
 const popup = document.querySelector('.pop');
+hoverElement.addEventListener('click', () => {
+  // Obtém o modal
+  var modal = document.getElementById("myModal");
 
-// Mostra o popup ao passar o mouse por cima
-hoverElement.addEventListener('mouseover', () => {
+  // Obtém o botão que fecha o modal
+  var span = document.getElementsByClassName("fecharbutton")[0];
+
+  // Mostra o modal
+  modal.style.display = "block";
     popup.classList.add('show');
-});
 
-// Esconde o popup ao remover o mouse de cima
-hoverElement.addEventListener('mouseout', () => {
-    popup.classList.remove('show');
-});
+  // Quando o usuário clica no botão de fechar (x), fecha o modal
+  span.onclick = function() {
+      modal.style.display = "none";
+         popup.classList.remove('show');
+  }
+
+  // Quando o usuário clica em qualquer lugar fora do modal, fecha-o
+  window.onclick = function(event) {
+      if (event.target == modal) {
+        popup.classList.remove('show');
+          modal.style.display = "none";
+      }
+  }
+})

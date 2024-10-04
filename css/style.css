@@ -6,8 +6,8 @@
  #478bfb18, #b54ae118,#8558de18);
  --primary-color-Default:linear-gradient(to right,#030007,
  #03070c, #0e0611,#0a0711);
- --primary-color-Variant:linear-gradient(to right,#5204c67c,
- #478cfb6f, #b64ae161,#8558de71);
+ --primary-color-Variant:linear-gradient(to right,#1a013fec,
+ #1c3a69, #3e194d,#3b2863);
 
  --padd:10px;
  --fontResp:22px;
@@ -27,10 +27,8 @@
     top: 0;
     left: 0;  
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.418);
-    z-index: 1000; /* Garante que o header esteja acima do conteúdo */
+    z-index: 100; /* Garante que o header esteja acima do conteúdo */
 }
-
-
 
 body {
     background: linear-gradient(to right,#030007,
@@ -55,11 +53,12 @@ body {
 }
 .container{
     border: 1px solid #ffffff1e ;
-    max-width: 640px;
+    max-width: 620px;
     margin: 3% auto;
     background: var(--primary-color3);
     padding: 1% 2%;
     border-radius: 40px;    
+    
 }
 
 form input, form label, form button {
@@ -71,6 +70,9 @@ form input, form label, form button {
 
 form label{
     font-size: 25px;
+    display: flex;
+    flex-direction: row;
+    
 }
 
 form input{
@@ -316,20 +318,20 @@ form button:active, .response button:hover{
 .pop{
     
     border: 1px solid #ffffff98 ;
-    max-width: 450px;
-    margin: 3% auto;
+    max-width: 490px;
+    margin: 10% auto;
     background: var(--primary-color-Variant);
     padding: 1% 1%;
     border-radius: 40px;    
     color: aliceblue;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-between;
-    display: none;
-    position: absolute;
+    z-index: 101;
   
 }   
 .pop.show {
     display: block;
+    z-index: 9999;
     transition: all 0.3s ease-in-out;
 }
 
@@ -342,6 +344,7 @@ form button:active, .response button:hover{
     flex-direction: column;
     align-items: center;
     margin-top: 0px;
+    padding: 30px;
 }
 
 .tittleTip1{
@@ -365,7 +368,8 @@ form button:active, .response button:hover{
     width: 150px;
     height: 55px;
     border-radius: 10px;
-    margin-top: -20px;
+    margin-top: -10px;
+ 
 }
 .pop p{
     align-self: center;
@@ -376,3 +380,61 @@ form button:active, .response button:hover{
     margin-bottom: 15px;
 }
 
+.modal {
+    z-index: 9999;
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    z-index: 9999;
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  	height:relative;
+    border-radius:10px;
+}
+.fecharbutton {
+    color: #aaa;
+    float: right;
+    font-size: 50px;
+   
+    display: flex;
+}
+
+.fecharbutton:hover,
+.fecharbutton:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.help{
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    padding: 5px ;
+    margin: -1% 1%;
+    cursor: pointer;
+    color: #aaa; /* Cor do ícone "?" */
+}
+.help:hover{
+    align-items: center;
+    justify-content: center;
+    display: flex; 
+    margin: -0% 0%;
+    width: 32px;            /* Largura */
+    height: 32px; 
+    box-shadow: 1px 1px 4px
+                inset;
+    border-radius: 50%;
+    color: #58cfec;
+}
