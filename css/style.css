@@ -1,19 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 :root {
  --primary-color:rgb(41, 41, 41);
  --primary-color2:rgb(41, 134, 162);
- --primary-color3:linear-gradient(to right,#5204c618,
- #478bfb18, #b54ae118,#8558de18);
+ --primary-color3: linear-gradient(90deg, 
+ rgba(82, 4, 198, 0.094) 0%, rgba(71, 139, 251, 0.094) 33.33%, 
+ rgba(181, 74, 225, 0.094) 66.67%, 
+ rgba(133, 88, 222, 0.094) 100%);
  --primary-color-Default:linear-gradient(to right,#030007,
  #03070c, #0e0611,#0a0711);
  --primary-color-Variant:linear-gradient(to right,#1a013fec,
  #1c3a69, #3e194d,#3b2863);
-
+ --larguraInput:55%;
  --padd:10px;
  --fontResp:22px;
  --margem:0;
  --altura:6%;
 }
+
 .header {
     border: 1px solid #ffffff1e;
     display: flex; /* Corrigir para display: flex */
@@ -28,11 +31,13 @@
     left: 0;  
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.418);
     z-index: 100; /* Garante que o header esteja acima do conteúdo */
+    font-size: 20px;
 }
 
 body {
-    background: linear-gradient(to right,#030007,
-    #03070c, #0e0611,#0a0711);
+    background: linear-gradient(90deg, #030007 0%, 
+    #03070C 33.33%, #0E0611 66.67%, #0A0711 100%);
+
     padding-top: 56px;
     color: aliceblue;
     margin:0;
@@ -45,68 +50,125 @@ body {
 
 }
 .logo img{
-    width: 60px;
-    height: 50px;
-    position: fixed;
-    top: 5px;
-    right: 49%;
+    width: 99px;
+    height: 42px;
+    position: flex;
+    flex-direction: column;
+    justify-content: center;    
+    margin-top: 10px;
+    margin-right: 20px;
 }
 .container{
-    border: 1px solid #ffffff1e ;
+    border: 1px solid rgba(62, 62, 62, 1);
     max-width: 620px;
     margin: 3% auto;
     background: var(--primary-color3);
-    padding: 1% 2%;
     border-radius: 40px;    
-    
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; 
 }
 
-form input, form label, form button {
-    display: block;
+form label {
     width: 100%;
     margin-bottom: 1%;
     border-radius: 10px;
-}
-
-form label{
-    font-size: 25px;
-    display: flex;
-    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    display:flex;
     
 }
 
+form h1{
+    margin-top: 20px;
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+form label{
+    color:#DD6531;
+    padding: 5px;
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    
+}
+.labelTop{
+    padding: 5px;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    white-space: normal;
+    text-align: center;
+   
+}
+
+
+.headTittle{
+    padding: 20px 20px;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    text-align: center;
+    border-bottom: 1px solid rgba(62, 62, 62, 1)
+   
+}
+.headTittle h1{
+    color: #DD6531;
+}
+
+
 form input{
+    border-radius: 20px;
+    width: var(--larguraInput);
+    align-items: center;
+    justify-content: center;
+    display:flex;
     font-size: 20px;
     height: 45px;
     padding: 0 10px;
+    margin-left: 22%;
+
 }
 form input:focus{
     outline: 3px solid  var(--primary-color2);
 
 }
-form button, .response button{
+form button, .response button, .container button {
     border: none;
-    background-color: var(--primary-color);
+    background-color: #DD6531;
     color: aliceblue;
     font-size: 18px;
-    height: 50px;
-    cursor:pointer;
-    border: 1px solid #ffffff1e ;
+    height: 45px;
+    cursor: pointer;
+    border: 1px solid #ffffff1e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: var(--larguraInput);
+    margin-left: 22%;
+    border-radius: 20px;
 }
-form button:hover, .response button:hover{
-    background-color: var(--primary-color2);
+form button:hover, .response button:hover, .container button:hover{
+    background-color: #a5461e;
 }
 form button:active, .response button:hover{
-    background-color:rgb(70, 161, 194);
+    background-color:rgb(87, 87, 87);
 }
 .acessosProf:focus{
     outline: 2px solid  var(--primary-color2);
 }
 
 .descrit {
-    font-size: 13px;
-    display: flex;
+    font-size: 16px;
     margin-bottom: 5px;
+    display: flex;
+    justify-content: center;
+    white-space: normal;
+    text-align: center;
 }
 
 .botao {
@@ -172,8 +234,12 @@ form button:active, .response button:hover{
 }
 .acessosProf::placeholder {
     text-align: center; 
-    font-size: 20px;
+    font-size: 15px;
     font-family: "Oswald", sans-serif;
+    font-optical-sizing: auto;
+}
+.name::placeholder, .cliente::placeholder, .id_input::placeholder,.key_input::placeholder {
+    font-size: 17px;
     font-optical-sizing: auto;
 }
 
@@ -188,37 +254,48 @@ form button:active, .response button:hover{
 
 
 /* Estilo comum dos dropdowns */
-.dropdown-content-left, .dropdown-content-right {
+.dropdown-content-left {
     display: none;
     position: absolute;
     background-color: #ffefee;
     min-width:auto;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
+    z-index: 999;
     margin-top: 15px;
     
 }
-
+.dropdown-content-right{
+    display: none;
+    position: absolute;
+    background-color: #ffefee;
+    min-width:auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 999;
+    margin-top: 14px;
+}
 .dropdown-content-right a {
     color: rgb(0, 0, 0);
-    padding: 12px 16px;
+    padding: 5px 11px;
     text-decoration: none;
     display: block;
-    
-}
 
-.dropdown-content-right a:hover {
-    background-color: rgba(253, 0, 0, 0.644);
-}
-.dropdown-content-left a:hover {
-    background-color: rgba(54, 54, 54, 0.219);
+    
+    
 }
 .dropdown-content-left a{
     color: rgb(0, 0, 0);
     padding: 12px 16px;
     text-decoration: none;
     display: block;
+   
 }
+.dropdown-content-right a:hover {
+    background-color: rgba(253, 0, 0, 0.644);
+}
+.dropdown-content-left a:hover {
+    background-color: rgba(54, 54, 54, 0.219);
+}
+
 .menu-left-container {
     display: flex; /* Alinha os menus da esquerda lado a lado */
     
@@ -242,15 +319,12 @@ form button:active, .response button:hover{
     position: relative;
     right: 20px;
     
+    
 }
 /* Menu Direito */
 .menu-right {
     position: relative;
-    display: flex;
-    align-items: center;
-    left:0.5%;
-    text-decoration: none;
-    
+    right: 20px;
 }
 #menu-left-button, #dashboard{
 
@@ -258,7 +332,7 @@ form button:active, .response button:hover{
 }
 
 #menu-left-button {
-    
+    font-size: 20px;
     color: white;
     padding: 16px;
     font-size: 16px;
@@ -280,6 +354,7 @@ form button:active, .response button:hover{
 
 /* Dashboard (nome do usuário) */
 #dashboard {
+    font-size: 20px;
     color: white;
     padding: 16px;
     font-size: 16px;
@@ -316,7 +391,6 @@ form button:active, .response button:hover{
 }
 
 .pop{
-    
     border: 1px solid #ffffff98 ;
     max-width: 490px;
     margin: 10% auto;
@@ -344,7 +418,7 @@ form button:active, .response button:hover{
     flex-direction: column;
     align-items: center;
     margin-top: 0px;
-    padding: 30px;
+    padding: 1px;
 }
 
 .tittleTip1{
@@ -368,18 +442,23 @@ form button:active, .response button:hover{
     width: 150px;
     height: 55px;
     border-radius: 10px;
-    margin-top: -10px;
+    margin-top: -1px;
+    padding: 5px;
  
 }
 .pop p{
     align-self: center;
 }
 .descritivo{
-    align-self: center;
-    margin-top: -20px;
-    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
 }
-
+.modal p, h2{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
 .modal {
     z-index: 9999;
     display: none;
@@ -391,6 +470,7 @@ form button:active, .response button:hover{
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.5);
+
 }
 
 .modal-content {
@@ -407,7 +487,6 @@ form button:active, .response button:hover{
     color: #aaa;
     float: right;
     font-size: 50px;
-   
     display: flex;
 }
 
@@ -417,24 +496,35 @@ form button:active, .response button:hover{
     text-decoration: none;
     cursor: pointer;
 }
+
+.boxText{
+    padding: 10px;
+    font-size: 20px;
+}
+
+#userForm{
+    
+    justify-content: flex-end; 
+    width: 100%;
+    
+}
+#stdesc{
+    white-space-collapse: collapse;
+    margin-left: 50px;
+}
 .help{
     align-items: center;
-    justify-content: center;
-    font-size: 25px;
-    padding: 5px ;
-    margin: -1% 1%;
-    cursor: pointer;
-    color: #aaa; /* Cor do ícone "?" */
-}
-.help:hover{
-    align-items: center;
-    justify-content: center;
-    display: flex; 
-    margin: -0% 0%;
-    width: 32px;            /* Largura */
+    justify-content:center;
+    display: flex;
+    width: 32px;     
     height: 32px; 
-    box-shadow: 1px 1px 4px
-                inset;
+    font-size: 21px;
+    background-color:#DD6531;
     border-radius: 50%;
-    color: #58cfec;
+    color: #ffffff;
+    float: right;
+    cursor: pointer;
+    position: relative;
+    margin-left: 55px;
+
 }

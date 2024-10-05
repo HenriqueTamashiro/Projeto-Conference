@@ -35,7 +35,7 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
       resultadoDiv.innerHTML = '<p>Nenhum usuário encontrado.</p>';
       return;
     }
-    const resultadoDiv = document.getElementById('userForm');
+    const resultadoDiv = document.getElementById('containerID');
     resultadoDiv.innerHTML = Acess;
     // Preenche os campos com os dados do usuário encontrado
     const nomeResp = document.getElementById('nomeResp');
@@ -54,7 +54,8 @@ document.getElementById('userForm').addEventListener('submit', function(event) {
   .catch(error => {
     console.error('Erro:', error);
     const resultadoDiv = document.querySelector('.container');
-    resultadoDiv.innerHTML = '<p>Erro ao buscar os dados. Tente novamente!</p>';
+    resultadoDiv.innerHTML = `<h1>Identificador e/ou Service Tag não encontrado(s)</h1>
+    <br><button class="retornar" onclick="window.location.reload();">Voltar</button>`;
   });
 });
 

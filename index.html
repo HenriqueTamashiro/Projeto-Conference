@@ -7,39 +7,42 @@
     <link rel="stylesheet" href="./css/style.css">
     <link rel="icon" href="../public/favicon.png" type="image/x-icon">
 </head>
+
 <body>
   <div id="header-placeholder"></div>
   <div id="myModal" class="modal">
         <section class="pop">
           <span class="fecharbutton"> &times;</span>
           <h2>O que é Service Tag ou Patrimônio?</h2>
-          <span class="descritivo">São identificadores únicos de cada equipamento.</span>
+          <span class="descritivo">São identificadores únicos de cada equipamento das quais existem 2 tipos:</span>
            <div class="box1">
                <p class="tittleTip1">SERVICE TAG</p>
-               <img class='servtag' src="./assets/imgs/st.jpeg">
+               <img class='servtag' src="./assets/imgs/st.png">
                </div>
-               <p>Utilize apenas a sequencia de números e letras após o "ST"!</p>
+               <p class="boxText">Utilizando apenas a sequencia de números e letras após a sigla "ST"!</p>
               
                <div class="box2">
                    <p class="tittleTip2">Patrimônio</p> 
-                   <img src="./assets/imgs//patri.jpg">
+                   <img src="./assets/imgs//patri.png">
                </div>
-               <p>Utilize os números após as sequencias de 0! </p>
+               <p class="boxText">Utilize os números após as sequencias de 0! </p>
       
        </section>
 
    </div>
 </div>
   
-  <section class="container">
+  <section class="container" id="containerID">
     <div id="response-placeholder"></div>
     <div id="popUp-placeholder"></div>
-
-    <form class="form" id="userForm" action="">
+    <div class="headTittle">
       <h1>Formulário para Liberação de Acesso CBYK</h1>
-      <p>
-        Preencha os campos para liberar os seus acessos de equipamento e e-mail. 
-      </p>
+      <label class="labelTop">
+        <p>Preencha os campos para liberar seus acessos<br>
+          de equipamento e e-mail.</p>
+      </label>
+    </div>
+    <form class="form" id="userForm" action="">
       <br>
       <label for="nome">Nome</label>
       <span class="descrit">Seu nome Completo.</span>
@@ -48,15 +51,13 @@
       <label for="Cliente">Cliente</label>
       <span class="descrit">Onde está alocado.</span>
       <input type="text" class="cliente" id="Cliente" placeholder="Cliente">
-
-      
-      <label for="Input-id">Identificador<div class="help" title="Entenda melhor!">&#63;</div></label>
-      <span class="descrit">Service tag (Etiqueta preta) ou Patrimônio.</span>
+   
+      <label for="Input-id" id="stdesc">Identificador<span class="help" title="Entenda melhor!">&#63;</span></label> 
+      <span class="descrit" >Service tag (Etiqueta preta) ou Patrimônio.</span>
       <input type="text" class="id_input" id="Input-id" placeholder="Identificador">
-    
 
       <label for="Key-valor">Key</label>
-      <span class="descrit">Sequências de números recebido juntamente de seu equipamento.</span>
+      <span class="descrit"><p>Sequências de números recebido juntamente <br>de seu equipamento.</p></span>
       <input type="text" class="key_input" id="Key-valor" placeholder="Chave única">
 
         <br><button>Enviar</button></br>

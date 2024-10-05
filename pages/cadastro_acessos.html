@@ -12,19 +12,24 @@
   <div id="header-placeholder"></div>
   
   <section class="container">
-    <h1>Registrar acessos.</h1>
-    <p>
-      Preencha os campos para cadastrar no banco de dados. 
-    </p>
-    <form id="userForm" class="form">
+
+    <form id="userForm" class="form"> 
+      <h1>Registrar acessos</h1>
+      <label class="labelTop">
+        Preencha os campos para efetuar o cadastro no banco de dados.
+      </label><br>
         <span class="descrit">Nome Completo.</span>
         <input type="text" name="nome" placeholder="Nome" required>
+
         <span class="descrit">Cliente do prestador.</span>
         <input type="text" name="cliente" placeholder="Cliente" required>
+
         <span class="descrit">Service tag ou patrimônio vinculado ao profissional.</span>
         <input type="text" name="identificador" placeholder="Service Tag ou Patrimônio" required>
-        <span class="descrit">Chave única enviada ao profissional, juntamente de seu equipamento.</span>
+
+        <span class="descrit">Chave única</span>
         <input type="text" name="key" id="randomKey" placeholder="Chave única" required>
+
         <span class="descrit">Acessos do profissional.</span>
         <textarea name="acessos" class='acessosProf' placeholder="Acessos de equipamento e e-mail" required></textarea>
         <br><br>
