@@ -8,8 +8,8 @@
  rgba(133, 88, 222, 0.094) 100%);
  --primary-color-Default:linear-gradient(to right,#030007,
  #03070c, #0e0611,#0a0711);
- --primary-color-Variant:linear-gradient(to right,#1a013fec,
- #1c3a69, #3e194d,#3b2863);
+ --primary-color-Variant:linear-gradient(to right,#10081b,
+ #051020, #1a0522,#0e0522);
  --larguraInput:55%;
  --padd:10px;
  --fontResp:22px;
@@ -37,7 +37,7 @@
 body {
     background: linear-gradient(90deg, #030007 0%, 
     #03070C 33.33%, #0E0611 66.67%, #0A0711 100%);
-
+    
     padding-top: 56px;
     color: aliceblue;
     margin:0;
@@ -58,17 +58,103 @@ body {
     margin-top: 10px;
     margin-right: 20px;
 }
+
 .container{
+    content: '';
+    position: relative;
     border: 1px solid rgba(62, 62, 62, 1);
+    height: 100%;
     max-width: 620px;
-    margin: 3% auto;
-    background: var(--primary-color3);
-    border-radius: 40px;    
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end; 
+    margin: 0 auto;
+    background: var(--primary-color-Variant);
+    border-radius: 40px; 
 }
 
+
+.container2{
+    content: '';
+    position: relative;
+    border: 1px solid rgba(62, 62, 62, 1);
+    height: 80%;
+    max-width: 620px;
+    margin: 0 auto;
+    background: var(--primary-color-Variant);
+    border-radius: 40px;    
+
+}
+.shell{
+    margin-top:30px ;
+}
+@property --angle{
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+@keyframes spin {
+    from {
+        --angle:0deg;
+    }
+    to{
+        --angle:360deg;
+    }
+}
+@keyframes pulse {
+    0% {
+      transform: scale(0.1); /* Tamanho inicial */
+      opacity: 0.1; /* Opacidade inicial */
+    }
+    50% {
+      transform: scale(1); /* Expande o elemento em 10% */
+      opacity: 0.5; /* Reduz a opacidade */
+    }
+    100% {
+      transform: scale(0.1); /* Volta ao tamanho original */
+      opacity: 0.1; /* Opacidade original */
+    }
+  }
+  
+.container::after, .container::before {
+   
+    content: '';
+    position: absolute;
+    height: 94%;
+    width: 94%;
+    background-image: conic-gradient(from var(--angle),  rgb(68, 0, 124),rgb(4, 86, 92),rgb(4, 42, 146),rgb(68, 0, 124));
+    top: 50%;
+    left: 50%;
+    translate:  -50% -50%;
+    z-index: -1;
+    padding: 5px;
+    border-radius: 40px;
+    animation: 4s spin linear infinite, pulse 15s ease-in-out infinite;;
+}
+.container2::after, .container2::before {
+   
+    content: '';
+    position: absolute;
+    height: 94%;
+    width: 94%;
+    background-image: conic-gradient(from var(--angle),  rgb(68, 0, 124),rgb(4, 86, 92),rgb(4, 42, 146),rgb(68, 0, 124));
+    top: 50%;
+    left: 50%;
+    translate:  -50% -50%;
+    z-index: -1;
+    padding: 5px;
+    border-radius: 40px;
+    animation: 8s spin linear infinite, pulse 10s ease-in-out infinite;;
+}
+.container2::before{
+    filter: blur(2rem);
+    opacity: 1.5;
+    
+
+}
+.container::before{
+    filter: blur(2rem);
+    opacity: 0.5;
+    
+
+}
 form label {
     width: 100%;
     margin-bottom: 1%;
@@ -120,7 +206,7 @@ form label{
 }
 
 
-form input{
+form input, .acessosProf{
     border-radius: 20px;
     width: var(--larguraInput);
     align-items: center;
@@ -180,11 +266,15 @@ form button:active, .response button:hover{
     cursor:pointer;
 }
 .acessosProf{
-    width: 100%;
-    height: 300px;
-    text-align: left;;
-    max-width: 100%;
-    max-height: 10%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 55%;
+    height: 200px;
+    resize: none;
+    padding: var(--padd);
+    
 }
 
 .acessosresp1{
@@ -192,10 +282,9 @@ form button:active, .response button:hover{
     height: 50px;
     text-align: left;;
     resize: none;
-    background: var(--primary-color3);
     border:1px solid #ffffff9d;
     border-radius: var(--fontResp);
-    color: aliceblue !important; /* Força a cor */
+    color: rgb(0, 0, 0) !important; /* Força a cor */
     font-size: var(--fontResp);
     padding: var(--padd);
     
@@ -205,10 +294,9 @@ form button:active, .response button:hover{
     height: 200px;
     text-align: left;;
     resize: none;
-    background: var(--primary-color3);
     border:1px solid #ffffff9d;
     border-radius: 20px;
-    color: aliceblue !important; /* Força a cor */
+    color: rgb(0, 0, 0) !important; /* Força a cor */
     font-size: var(--fontResp);
     padding: var(--padd);
     
@@ -502,15 +590,8 @@ form button:active, .response button:hover{
     font-size: 20px;
 }
 
-#userForm{
-    
-    justify-content: flex-end; 
-    width: 100%;
-    
-}
 #stdesc{
-    white-space-collapse: collapse;
-    margin-left: 50px;
+    padding-left: 110px;
 }
 .help{
     align-items: center;
@@ -525,6 +606,6 @@ form button:active, .response button:hover{
     float: right;
     cursor: pointer;
     position: relative;
-    margin-left: 55px;
+  margin-left: 70px;
 
 }
