@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 loginButton.style.display = 'none';
                 logoutButton.style.display = 'block';
             } else {
+                window.location.replace('/pages/login.html');
                 throw new Error('Token inválido ou expirado.');
             }
 
@@ -61,7 +62,7 @@ document.getElementById('userForm').addEventListener('submit',async function(eve
     const data = {
         nome: formData.get('nome'),
         cliente: formData.get('cliente'),
-        identificador: formData.get('identificador'),
+        identificador: formData.get('identificador').toUpperCase(),
         key_valor: formData.get('key'),
         acessos: formData.get('acessos')
     };

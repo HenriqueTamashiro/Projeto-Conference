@@ -116,7 +116,7 @@ app.get('/get-user', (req, res) => {
   const { identificador, key_valor } = req.query;
   
   const selectQuery = `SELECT * FROM usuarios WHERE identificador = ? AND key_valor = ?`;
-
+  
   connection.query(selectQuery, [identificador, key_valor], (err, resultados) => {
     if (err) {
       console.error('Erro ao buscar os dados:', err);
@@ -125,13 +125,24 @@ app.get('/get-user', (req, res) => {
 
     if (resultados.length > 0) {
       console.log('Usuário encontrado:', resultados);
-      res.json(resultados);
+      const userData = resultados[0];
+      const deleteQuery = `DELETE FROM usuarios WHERE identificador = ? AND key_valor = ?`; 
+  connection.query(deleteQuery, [identificador, key_valor],(err) => {
+    if(err){
+      console.error(`Erro ao deletar o usuário!`,err);
+      return res.status(500).send('Erro ao deletar os dados consultados');
+    }
+    res.json({ message: 'Consulta e remoção de dados executados com sucesso!', userData });
+  });
+
     } else {
       console.log('Nenhum usuário encontrado com esses dados.');
       res.status(404).send('Usuário não encontrado');
     }
   });
 });
+
+
 
 
 // --- Endpoint para login ---
