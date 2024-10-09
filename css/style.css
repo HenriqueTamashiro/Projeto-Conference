@@ -17,6 +17,20 @@
  --altura:6%;
 }
 
+
+@media print {
+    button{
+        display: none!important; /* Oculta todos os elementos */
+    }
+    .header{
+        display: none!important;
+    }
+*{   
+     background: none !important; /* Remove o fundo de todos os elementos */
+    color: black !important; /* Garante que o texto seja impresso em preto */
+}
+}
+
 .header {
     border: 1px solid #ffffff1e;
     display: flex; /* Corrigir para display: flex */
@@ -232,7 +246,7 @@ form input:focus{
     outline: 3px solid  var(--primary-color2);
 
 }
-form button, .response button, .container button {
+form button, .response button, .container button, .buttonReturn {
     border: none;
     background-color: #DD6531;
     color: aliceblue;
@@ -249,7 +263,7 @@ form button, .response button, .container button {
     border-radius: 20px;
 }
 
-form button:hover, .response button:hover, .container button:hover{
+form button:hover, .response button:hover, .container button:hover, .buttonReturn:hover{
     background-color: #a5461e;
 }
 form button:active, .response button:hover{
@@ -645,24 +659,7 @@ form button:active, .response button:hover{
   margin-left: 70px;
 
 }
-@media print {
-    body {
-        background: transparent!important; /* Cor de fundo branca para impressão */
-        color: rgb(180, 180, 180); /* Cor do texto preto para impressão */
-    }
-    
-    .box table{
-           
-        border: 1px solid #ffffff;
-    }
-            th,td {
-            
-       
-            padding: 10px;
-            border: 1px solid #ffffff;
-         
-        }
-}
+
  table{
            
             margin: 10px auto;

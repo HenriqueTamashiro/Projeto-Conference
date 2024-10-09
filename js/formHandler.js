@@ -85,13 +85,25 @@ document.getElementById('userForm').addEventListener('submit',async function(eve
             }
             else if (responseAdd.status === 200){ 
                 alert('Dados adicionados!');
-
-                document.addEventListener('DOMContentLoaded', async () => {
-                    const responseAcess = await fetch('/pages/responseTable.html');
-                    const Acess = await responseAcess.text();
-                    document.getElementById('table-placeholder').innerHTML = Acess;
-                })
-                form.reset();
+                
+                const responseAcess = await fetch('/pages/responseTable.html');
+                const Acess = await responseAcess.text();
+                const resultDiv = document.getElementById('container2ID');
+                resultDiv.innerHTML = Acess;
+                
+             
+                // Usar innerText ou textContent para preencher as células da tabela
+                const nTable = document.getElementById('nameTable');
+                const cTable = document.getElementById('clientTable');
+                const iTable = document.getElementById('idTable');
+                const kTable = document.getElementById('keyTable');
+                
+                nTable.textContent = data.nome;
+                cTable.textContent = data.cliente;
+                iTable.textContent = data.identificador;
+                kTable.textContent = data.key_valor;
+                
+              
                 }
     
         } catch (error) {
