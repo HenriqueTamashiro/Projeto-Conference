@@ -71,6 +71,7 @@ body {
 }
 
 
+
 .container2{
     content: '';
     position: relative;
@@ -529,6 +530,18 @@ form button:active, .response button:hover{
     text-align: center;
     
 }
+.tittleTip3{
+    font-size: 25px;
+    text-align: center;
+    border-bottom: 1px solid #ffffff1e;
+    border-top: 1px solid #ffffff1e;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px;
+    width: 100%;
+    color: #DD6531;
+    
+}
 .tittleTip2{
     font-size: 25px;
     text-align: center;
@@ -631,4 +644,81 @@ form button:active, .response button:hover{
     position: relative;
   margin-left: 70px;
 
+}
+@media print {
+    body {
+        background: transparent!important; /* Cor de fundo branca para impressão */
+        color: rgb(180, 180, 180); /* Cor do texto preto para impressão */
+    }
+    
+    .box table{
+           
+        border: 1px solid #ffffff;
+    }
+            th,td {
+            
+       
+            padding: 10px;
+            border: 1px solid #ffffff;
+         
+        }
+}
+ table{
+           
+            margin: 10px auto;
+        }
+        .containerBox{
+
+            width: 100%;
+        }
+        .box{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: aliceblue;
+           
+            
+        }
+
+        th,td {
+            
+           
+         
+        }
+        th{
+            width: 5%;
+            text-align: left;
+            white-space: nowrap;
+            
+        }
+        td{
+            width: 20%;
+            padding:5px 80px;
+        }
+  
+
+
+
+.read table{
+    border:0px;
+    color: aliceblue;
+}
+.read{
+             text-align:center ;
+             width: 700px;
+        }
+.read th{
+             text-align:center ;
+             
+        }
+.container1{
+    content: '';
+    position: relative;
+    border: 1px solid rgba(62, 62, 62, 1);
+    height: 100%;
+    max-width: 710px;
+    margin: 50px auto;
+    background: var(--primary-color-Variant);
+    border-radius: 40px; 
+    display: flex;
 }

@@ -85,6 +85,12 @@ document.getElementById('userForm').addEventListener('submit',async function(eve
             }
             else if (responseAdd.status === 200){ 
                 alert('Dados adicionados!');
+
+                document.addEventListener('DOMContentLoaded', async () => {
+                    const responseAcess = await fetch('/pages/responseTable.html');
+                    const Acess = await responseAcess.text();
+                    document.getElementById('table-placeholder').innerHTML = Acess;
+                })
                 form.reset();
                 }
     

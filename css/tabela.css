@@ -1,0 +1,59 @@
+@media print {
+    body {
+        background: transparent!important; /* Cor de fundo branca para impressão */
+        color: rgb(180, 180, 180); /* Cor do texto preto para impressão */
+    }
+}
+ table{
+            border: 1px solid #000;
+        }
+        .containerBox{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .box{
+            
+            color: aliceblue;
+           
+            
+        }
+
+        .box table{
+           
+            border: 1px solid #000;
+        }
+        th,td {
+            
+            background-color: rgb(18, 120, 151);
+            padding: 10px;
+            border: 1px solid #ffffff;
+         
+        }
+        th{
+            width: 5%;
+            text-align: left;
+            white-space: nowrap;
+            
+        }
+        td{
+            width: 20%;
+            padding:5px 80px;
+        }
+  
+
+
+
+.read table{
+    border:0px;
+    color: aliceblue;
+}
+.read{
+             text-align:center ;
+             width: 700px;
+        }
+.read th{
+             text-align:center ;
+             
+        }
