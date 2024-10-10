@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 
-const password = '123'; // Senha original
+const password = "#hen13ri11que96"; // Senha original
 const saltRounds = 10; // Número de rounds para o hash
 
 bcrypt.hash(password, saltRounds, (err, hash) => {

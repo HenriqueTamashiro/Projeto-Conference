@@ -80,6 +80,28 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
+
+app.post('/register',async(req,resp)=>{
+cosnt = {username,password} = req.body;
+connection.query('SELECT * FROM autenticacao where username =? ', [username],async(err,resultado)=>{
+if (err){
+  return resp.status(400).json({message:'Erro ao verificar'});
+}
+if(resultado.length > 0){
+  return resp.status(400).json({message:'Usuário existente!'});
+}
+
+const hashedPassword = await bcrypt.hash(password,10);
+
+connection.query(`INSERT INTO autenticacao(username, password) VALUES(?,?)`, [username,hashedPassword], (err,resultado)=>{
+if (err)
+  return resp.status(400).json({message:'Usuário não cadastrado.'});
+}  
+resp.status(200).json({message:'Usuário cadastrado.'});
+});
+});
+
+
 app.post('/add-user', authenticateToken, (req, res) => {
   const { nome, cliente, identificador, key_valor, acessos } = req.body;
 

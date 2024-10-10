@@ -13,7 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(result => {
         // Exibe a mensagem do servidor no elemento HTML
-        document.getElementById('dashboard').innerText = result.message;
+        const formattedName = result.message.replace('.', ' '); // Substitui o ponto por um espaço
+        document.getElementById('dashboard').innerText = formattedName;
+
         
     })
     .catch(error => {
@@ -82,7 +84,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
     const formData = new FormData(event.target);  // Pega os dados do formulário
     const data = {
-        username: formData.get('username'),
+        username: formData.get('username').toUpperCase(),
         password: formData.get('password')
     };
 

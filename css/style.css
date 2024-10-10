@@ -64,13 +64,12 @@ body {
 
 }
 .logo img{
-    width: 99px;
+    width: 100px;
     height: 42px;
     position: flex;
-    flex-direction: column;
-    justify-content: center;    
-    margin-top: 10px;
-    margin-right: 20px;
+    margin-top: 5px;
+    margin-left: 50px;
+    margin-right: auto;
 }
 
 .container{
@@ -438,7 +437,14 @@ form button:active, .response button:hover{
 /* Menu Direito */
 .menu-right {
     position: relative;
-    right: 20px;
+    display: flex;
+    text-overflow: ellipsis;
+    width: 150px;
+    
+}
+
+.dashboard-container{
+    flex-direction: row;
 }
 #menu-left-button, #dashboard{
 
