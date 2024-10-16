@@ -21,6 +21,7 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
 // Configuração da conexão com o banco de dados
 const porta_db = 3306;
 const connection = mysql.createConnection({
@@ -30,6 +31,7 @@ const connection = mysql.createConnection({
   database: 'users',
   port: porta_db
 });
+
 
 
 async function findUserByUsername(username) {
