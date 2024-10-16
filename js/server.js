@@ -26,7 +26,7 @@ const porta_db = 3306;
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: '#c1B2y3k4@e5n6C7r8y9Pt@',
+  password: process.env.DB_PASSWORD,
   database: 'users',
   port: porta_db
 });
@@ -80,26 +80,6 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-
-app.post('/register',async(req,resp)=>{
-cosnt = {username,password} = req.body;
-connection.query('SELECT * FROM autenticacao where username =? ', [username],async(err,resultado)=>{
-if (err){
-  return resp.status(400).json({message:'Erro ao verificar'});
-}
-if(resultado.length > 0){
-  return resp.status(400).json({message:'Usuário existente!'});
-}
-
-const hashedPassword = await bcrypt.hash(password,10);
-
-connection.query(`INSERT INTO autenticacao(username, password) VALUES(?,?)`, [username,hashedPassword], (err,resultado)=>{
-if (err)
-  return resp.status(400).json({message:'Usuário não cadastrado.'});
-}  
-resp.status(200).json({message:'Usuário cadastrado.'});
-});
-});
 
 
 app.post('/add-user', authenticateToken, (req, res) => {
@@ -273,6 +253,34 @@ app.get('/dashboard', authenticateToken, (req, res) => {
 
   // Envie a resposta de uma só vez
   res.status(200).json({ loggedIn: true, username: req.user.username });
+});
+
+app.post('/register',authenticateToken, async  (req, resp) => {
+  console.log('Funcionando');
+  const { username, password } = req.body;
+
+  // Verificar se os campos estão presentes
+  connection.query('SELECT * FROM autenticacao WHERE username = ?', [username], async (err, resultado) => {
+    if (err) {
+      return resp.status(400).json({ message: 'Erro ao verificar' });
+    }
+    if (resultado.length > 0) {
+      return resp.status(409).json({ message: 'Usuário existente!' });
+    }
+
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      connection.query('INSERT INTO autenticacao(username, password) VALUES (?, ?)', [username, hashedPassword], (err, resultado) => {
+        if (err) {
+          return resp.status(400).send('Usuário não foi cadastrado.');
+        }
+        resp.send('Cadastrado')
+      });
+    } catch (error) {
+      return resp.status(500).send('Erro ao criptografar a senha.');
+    }
+  });
 });
 
 
