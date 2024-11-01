@@ -25,6 +25,9 @@
     .header{
         display: none!important;
     }
+    #idTable, .identTable{
+        display: none;
+    }
 *{   
      background: none !important; /* Remove o fundo de todos os elementos */
     color: black !important; /* Garante que o texto seja impresso em preto */
