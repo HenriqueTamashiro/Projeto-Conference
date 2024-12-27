@@ -6,16 +6,16 @@ const bcrypt = require('bcryptjs');
 const path = require('path');
 const jwt = require('jsonwebtoken');
 const session = require('express-session');
-require('dotenv').config(); // Importa e configura o dotenv
-const JWT_SECRET = process.env.SECRET_KEY;  // Usa a chave secreta do .env
+require('dotenv').config(); 
+const JWT_SECRET = process.env.SECRET_KEY;  
 const app = express();
 
 
 
-// Configurar o CORS para permitir todos os domínios
+
 app.use(cors({
   origin: 'https://conference.cbyk.com',
-  methods: ['GET', 'POST'], // Especifica os métodos permitidos
+  methods: ['GET', 'POST'], 
   credentials: false
 }));
 app.use(bodyParser.json());
@@ -41,7 +41,7 @@ async function findUserByUsername(username) {
           if (error) {
               return reject(error);
           }
-          resolve(results[0]); // Retorna o primeiro usuário encontrado
+          resolve(results[0]); 
       });
   });
 }
@@ -55,10 +55,9 @@ connection.connect(err => {
   console.log('Conectado ao banco de dados!');
 });
 
-// Configuração do middleware de sessões
+
 app.use(session({
-  secret: process.env.SECRET_KEY, // Usa a chave secreta do .env
-  resave: false,
+  secret: process.env.SECRET_KEY, 
   saveUninitialized: true,
   cookie: { secure: true, 
             maxAge: 1000 * 60 * 60 
@@ -77,8 +76,8 @@ const authenticateToken = (req, res, next) => {
   jwt.verify(token, JWT_SECRET, (err, user) => {
       if (err) return res.status(403).send({ message: 'Token inválido ou expirado' });
       
-      req.user = user; // Armazena os dados do usuário decodificados
-      next(); // Chama o próximo middleware ou a rota
+      req.user = user; 
+      next(); 
   });
 };
 
@@ -87,7 +86,7 @@ const authenticateToken = (req, res, next) => {
 app.post('/add-user', authenticateToken, (req, res) => {
   const { nome, cliente, identificador, key_valor, acessos } = req.body;
 
-  // Verifica se a key_valor já existe no banco de dados
+
   const checkKeyQuery = 'SELECT * FROM usuarios WHERE key_valor = ?';
 
   connection.query(checkKeyQuery, [key_valor], (err, results) => {
@@ -97,11 +96,11 @@ app.post('/add-user', authenticateToken, (req, res) => {
     }
 
     if (results.length > 0) {
-      // Se a key_valor já existe, retorna um erro
+     
       return res.status(400).send('key_valor já existe no banco de dados');
     }
 
-    // Se a key_valor não existe, insere os dados no banco de dados
+   
     const insertQuery = `INSERT INTO usuarios (nome, cliente, identificador, key_valor, acessos) VALUES (?, ?, ?, ?, ?)`;
 
     connection.query(insertQuery, [nome, cliente, identificador, key_valor, acessos], (err, result) => {
@@ -115,7 +114,7 @@ app.post('/add-user', authenticateToken, (req, res) => {
   });
 });
 
-// --- Rota para buscar usuário pelo identificador e key ---
+
 app.get('/get-user', (req, res) => {
   const { identificador, key_valor } = req.query;
   
@@ -149,11 +148,11 @@ app.get('/get-user', (req, res) => {
 
 
 
-// --- Endpoint para login ---
+
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
-  // Buscar o usuário no banco de dados
+
   const user = await findUserByUsername(username);
   
   if (!user) {
@@ -183,9 +182,9 @@ app.post('/login', async (req, res) => {
 
 
 
-// Supondo que você esteja usando Express.js
+
 app.post('/generate-key', authenticateToken, (req, res) => {
-  // Função para gerar uma chave aleatória com letras, números e caracteres especiais
+  
   const gerarChaveAleatoria = (tamanho) => {
     const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?'; // Conjunto de caracteres
     let chaveAleatoria = '';
@@ -210,10 +209,10 @@ app.post('/generate-key', authenticateToken, (req, res) => {
       }
 
       if (results.length > 0) {
-        // Se a chave já existe, gera outra
+        
         gerarChaveUnica();
       } else {
-        // Chave única gerada
+        
         res.json({ key: chaveAleatoria });
       }
     });
@@ -225,8 +224,7 @@ app.post('/generate-key', authenticateToken, (req, res) => {
 
 
 
-// Endpoint de teste para buscar todos os usuários
-// Rota para testar a conexão com o banco de dados
+
 app.get('/test-database', authenticateToken,(req, res) => {
   console.log('Rota /test-database acessada');
 
@@ -236,7 +234,7 @@ app.get('/test-database', authenticateToken,(req, res) => {
       return res.status(500).send('Erro ao conectar ao banco de dados');
     }
 
-    // Retornando todos os resultados da tabela 'usuarios'
+    
     res.json({
       message: 'A conexão foi bem-sucedida!',
       data: results
@@ -244,16 +242,16 @@ app.get('/test-database', authenticateToken,(req, res) => {
   });
 });
 app.get('/isLoggedIn', authenticateToken, (req, res) => {
-  // Se o token for válido, o middleware `authenticateToken` permitirá a passagem aqui.
+  
   res.status(200).send({ loggedIn: true, username: req.user.username });
   console.log('Sessão encontrada:', req.user);
 
 });
-// --- Rota protegida: Dashboard ---
+
 app.get('/dashboard', authenticateToken, (req, res) => {
   console.log('Sessão encontrada:', req.user);
 
-  // Envie a resposta de uma só vez
+  
   res.status(200).json({ loggedIn: true, username: req.user.username });
 });
 
@@ -261,7 +259,7 @@ app.post('/register',authenticateToken, async  (req, resp) => {
   console.log('Funcionando');
   const { username, password } = req.body;
 
-  // Verificar se os campos estão presentes
+ 
   connection.query('SELECT * FROM autenticacao WHERE username = ?', [username], async (err, resultado) => {
     if (err) {
       return resp.status(400).json({ message: 'Erro ao verificar' });
