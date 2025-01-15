@@ -1,44 +1,74 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
+<head> 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liberação de acessos CBYK.</title>
     <link rel="stylesheet" href="./css/style.css">
-    <link rel="icon" href="../public/favicon.png" type="image/x-icon">
+    <link rel="icon" href="./public/favicon.png" type="image/x-icon">
 </head>
+
 <body>
   <div id="header-placeholder"></div>
+  <div id="myModal" class="modal">
+        <section class="pop">
+          <span class="fecharbutton"> &times;</span>
+          <h2>O que é Service Tag ou Patrimônio?</h2>
+          <span class="descritivo">São identificadores únicos de cada equipamento das quais podem ser:</span>
+           <div class="box1">
+               <p class="tittleTip1">SERVICE TAG
+               <img class='servtag' src="./assets/imgs/st.png"></p>
+               </div>
+               <p class="boxText">Utilizando apenas a sequencia de números e letras <br>após a sigla "ST"!</p>
+              
+               <div class="box2">
+                   <p class="tittleTip2">PATRIMÔNIO
+                   <img src="./assets/imgs//patri.png"></p> 
+               </div>
+               <p class="boxText">Utilize os números após as sequencias de 0! </p>
+      
+       </section>
 
-
-  <section class="container">
-    <h1>Formulário para Liberação de Acesso CBYK</h1>
-    <p>
-      Preencha os campos para liberar os seus acessos de equipamento e e-mail. 
-    </p>
-
+   </div>
+</div>
+  <div class="shell">
+  <section class="container" id="containerID">
+    <div id="response-placeholder"></div>
+    <div id="popUp-placeholder"></div>
+    <div class="headTittle">
+      <h1>Formulário para Liberação de Acesso CBYK</h1>
+      <label class="labelTop">
+        <p>Preencha os campos para liberar seus acessos<br>
+          de equipamento e e-mail.</p>
+      </label>
+    </div>
     <form class="form" id="userForm" action="">
+      <br>
       <label for="nome">Nome</label>
       <span class="descrit">Seu nome Completo.</span>
-      <input type="text" class="name" id="nome" placeholder="Nome">
+      <input type="text" class="name" id="nome" placeholder="Nome" required>
 
       <label for="Cliente">Cliente</label>
       <span class="descrit">Onde está alocado.</span>
-      <input type="text" class="cliente" id="Cliente" placeholder="Cliente">
-
-      <label for="Input-id">ID</label>
-      <span class="descrit">Service tag (Etiqueta preta) ou Patrimônio.</span>
+      <input type="text" class="cliente" id="Cliente" placeholder="Cliente" required>
+   
+      <label for="Input-id" id="stdesc">Identificador<span class="help" title="Entenda melhor!" required>&#63;</span></label> 
+      <span class="descrit" >Service tag (Etiqueta preta) ou Patrimônio.</span>
       <input type="text" class="id_input" id="Input-id" placeholder="Identificador">
 
-      <label for="Key-valor">Key</label>
-      <span class="descrit">Sequência de números recebido juntamente de seu equipamento.</span>
-      <input type="text" class="key_input" id="Key-valor" placeholder="Chave única">
+      <label for="Key-valor">Key CBYK</label>
+      <span class="descrit"><p>Key CBYK recebido juntamente <br>de seu equipamento.</p></span>
+      <input type="text" class="key_input" id="Key-valor" placeholder="Chave única" required>
 
-        <br><button>Enviar</button></br>
+      <br> <br><button class="botao">Enviar</button>
+      <br>
+      <br>
     </form>
-
-    <div class="content"></div> <!-- Área para carregar o conteúdo -->
+   
+    <div id="content"></div> <!-- Área para carregar o conteúdo -->
   </section>
+  
+
   <script src="./js/main.js"></script>
 </body>
 </html>

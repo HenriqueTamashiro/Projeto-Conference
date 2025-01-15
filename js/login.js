@@ -1,54 +1,29 @@
-document.getElementById('loginForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-
-    const data = { username, password };
-
-    fetch('/login', {
-        method: 'POST',
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/dashboard', {
+        method: 'GET',
         headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(result => {
-        if (result.token) {  // Se o login foi bem-sucedido e o token foi retornado
-            localStorage.setItem('token', result.token);  // Salva o token no Local Storage
-            window.location.href = '../pages/cadastro_acessos.html';  // Redireciona para a página do painel
-        } else {
-            alert(result.message);  // Exibe a mensagem de erro retornada
+            'Authorization': localStorage.getItem('token')  // Envia o token JWT
         }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erro ao carregar o dashboard.');
+        }
+        return response.json();
+    })
+    .then(result => {
+        // Exibe a mensagem do servidor no elemento HTML
+        const formattedName = result.message.replace('.', ' '); // Substitui o ponto por um espaço
+        document.getElementById('dashboard').innerText = formattedName;
+
+        
     })
     .catch(error => {
         console.error('Erro:', error);
-        alert('Ocorreu um erro no login. Tente novamente.');
+        document.getElementById('dashboard').innerText = 'Falha ao carregar o dashboard.';
     });
-});
-
-
-fetch('/isLoggedIn', {
-    credentials: 'include',  // Inclui cookies de sessão
-  })
-  .then(response => response.json())
-  .then(data => {
-    const dashboard = document.getElementById('dashboard');
-    const logoutButton = document.getElementById('logoutButton');
-
-    if (data.loggedIn) {
-      // Exibe o nome do usuário e o botão de deslogar
-      dashboard.textContent = data.username;
-      logoutButton.style.display = 'block';
-    } else {
-      // Esconde o botão de deslogar se não estiver logado
-      dashboard.textContent = 'Não logado';
-      logoutButton.style.display = 'none';
-    }
   });
-
-  // Adiciona funcionalidade ao botão de logout
+  
   document.addEventListener('DOMContentLoaded', async () => {
     // Carregar o header
     const headerResponse = await fetch('../pages/header.html');
@@ -66,7 +41,7 @@ fetch('/isLoggedIn', {
     if (token) {
         // Se o token existe, validar com o servidor
         try {
-            const response = await fetch('http://127.0.0.1:3300/dashboard', {
+            const response = await fetch('https://conference.cbyk.com/dashboard', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -92,25 +67,58 @@ fetch('/isLoggedIn', {
         // Adicionar o evento de logout
         document.getElementById('logoutButton').addEventListener('click', async () => {
             try {
-                const response = await fetch('/logout', {
-                    method: 'POST',
-                    credentials: 'include'
-                });
-
-                if (response.ok) {
-                    localStorage.removeItem('token'); // Remove o token
-                    window.location.href = '/pages/login.html'; // Redireciona para o login
-                } else {
-                    alert('Erro ao deslogar. Tente novamente.');
+                    localStorage.removeItem('token'); // Remove o token do localStorage
+                    alert('Deslogado com Sucesso!');
+                    window.location.href = 'https://conference.cbyk.com/pages/login.html'; // Redireciona para a página de login
                 }
-            } catch (error) {
+             catch (error) {
+                console.error('Erro ao deslogar');
+                alert('Erro ao deslogar. Tente novamente.');
                 console.error('Erro:', error);
             }
         });
-
-    } else {
-        // Caso não tenha token, mostrar o botão de login e ocultar o menu
-        profileMenu.style.display = 'none';
-        loginButton.style.display = 'block';
     }
 });
+document.getElementById('loginForm').addEventListener('submit', async function(event) {
+    event.preventDefault();  // Evita o recarregamento da página ao enviar o formulário
+
+    const formData = new FormData(event.target);  // Pega os dados do formulário
+    const data = {
+        username: formData.get('username').toUpperCase(),
+        password: formData.get('password')
+    };
+
+
+    
+    try {
+        const response = await fetch('https://conference.cbyk.com/login', {  // Endpoint de login
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (result.token) {  // Se o login foi bem-sucedido e o token foi recebido
+            localStorage.setItem('token', result.token);  // Salva o token no localStorage
+            window.location.href = 'https://conference.cbyk.com/pages/cadastro_acessos.html'; // Redireciona para a página de logi
+            
+            
+            console.log(result)
+            
+            
+        } else {
+            console.error('Token não recebido:', result);
+            alert('Login falhou, tente novamente.');
+        }
+
+    } catch (error) {
+        console.error('Erro no login:', error);
+    }
+
+
+    
+});
+

@@ -1,116 +1,102 @@
+// Listener para o envio do formulário
 document.getElementById('userForm').addEventListener('submit', function(event) {
   event.preventDefault(); // Impede o envio padrão do formulário
 
-  const identificador = document.querySelector('.id_input').value;
-  const key_valor = document.querySelector('.key_input').value;
+  const form = document.querySelector('.form');
+  const identificador = form.querySelector('.id_input').value;
+  const key_valor = form.querySelector('.key_input').value;
 
-  const valor = {
-    identificador: identificador,
-    key_valor: key_valor
-  };
-
-  fetch('/get-user', {
-    method: 'POST',
+  // Cria a URL com parâmetros de consulta
+  const url = `/get-user?identificador=${encodeURIComponent(identificador)}&key_valor=${encodeURIComponent(key_valor)}`;
+ 
+  fetch(url, {
+    method: 'GET', // Método GET
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(valor),
   })
   .then(response => {
     if (!response.ok) {
       throw new Error('Erro ao buscar os dados: ' + response.statusText);
     }
-    return response.json();
+    return response.json(); // Converte a resposta para JSON
   })
-  .then(valor => {
+  .then(async valor => {
     console.log('Dados recebidos:', valor);
+    alert('ATENÇÃO! Anote seus acessos, pois eles serão deletados após esta consulta!')
     
-    // Exibe os dados no HTML
-    const resultadoDiv = document.querySelector('.container');
-    resultadoDiv.innerHTML = ''; // Limpa os resultados anteriores
+    // Carrega o HTML adicional
+    const responseAcess = await fetch('/pages/responseAcess.html');
+    const Acess = await responseAcess.text();
     
-    valor.forEach(user => {
-      const userElement = document.createElement('div');
-      userElement.innerHTML = `
-        <p><strong>Nome:</strong> ${user.nome}</p>
-        <p><strong>Cliente:</strong> ${user.cliente}</p>
-        <p><strong>Identificador:</strong> ${user.identificador}</p>
-        <p><strong>Acessos:</strong> ${user.acessos}</p>
-        <button onclick="window.location.reload()">Voltar</button> </div>
-      `;
-      resultadoDiv.appendChild(userElement);
-    });
+    if (valor.userData) {
+      // Preenche os campos com os dados do usuário encontrado
+      const resultadoDiv = document.getElementById('containerID');
+      resultadoDiv.innerHTML = Acess;
+      
+      const nomeResp = document.getElementById('nomeResp');
+      const idResp = document.getElementById('idResp');
+      const keyResp = document.getElementById('keyResp');
+      const acessosResp = document.getElementById('acessosResp');
+
+      nomeResp.value = valor.userData.nome;
+      idResp.value = valor.userData.identificador.toUpperCase();
+      keyResp.value = valor.userData.key_valor;
+      acessosResp.value = valor.userData.acessos;
+    } else {
+      // Se nenhum usuário foi encontrado
+      const resultadoDiv = document.querySelector('.container');
+      resultadoDiv.innerHTML = '<p>Nenhum usuário encontrado.</p>';
+    }
   })
   .catch(error => {
     console.error('Erro:', error);
-    const resultadoDiv = document.getElementById('content');
-    resultadoDiv.innerHTML = '<p>Erro ao buscar os dados. Tente novamente.!</p>';
+    const resultadoDiv = document.querySelector('.container');
+    resultadoDiv.innerHTML = `<h1>Identificador e/ou Service Tag não encontrado(s)</h1>
+    <br><button class="retornar" onclick="window.location.reload();">Voltar</button>`;
   });
 });
+
+// Listener para carregar o header após o DOM estar pronto
 document.addEventListener('DOMContentLoaded', async () => {
-  // Carregar o header
-  const headerResponse = await fetch('./pages/header.html');
+  const headerResponse = await fetch('/pages/header.html');
   const headerData = await headerResponse.text();
   document.getElementById('header-placeholder').innerHTML = headerData;
 
-  // Verificar o token
-  const token = localStorage.getItem('token'); 
-
-  // Referências aos elementos do header
+  const token = localStorage.getItem('token');
   const profileMenu = document.getElementById('profileMenu');
   const loginButton = document.getElementById('loginButton');
+  const logoutButton = document.getElementById('logoutButton');
   const dashboard = document.getElementById('dashboard');
-  
-  if (token) {
-      // Se o token existe, validar com o servidor
-      try {
-          const response = await fetch('/dashboard', {
-              method: 'GET',
-              headers: {
-                  'Authorization': `Bearer ${token}`
-              }
-          });
 
-          if (!response.ok) {
-              throw new Error('Token inválido ou expirado.');
-          }
-
-          const result = await response.json();
-          dashboard.innerText = result.message; // Exibe o nome do usuário
-          profileMenu.style.display = 'block';
-          loginButton.style.display = 'none';
-
-      } catch (error) {
-          console.error('Erro:', error);
-          alert('Sua sessão expirou. Faça login novamente.');
-          localStorage.removeItem('token');  // Remove o token inválido
-          window.location.href = '/pages/login.html';  // Redireciona para a página de login
-      }
-
-      // Adicionar o evento de logout
-      document.getElementById('logoutButton').addEventListener('click', async () => {
-          try {
-              const response = await fetch('/logout', {
-                  method: 'POST',
-                  credentials: 'include'
-              });
-
-              if (response.ok) {
-                  localStorage.removeItem('token'); // Remove o token
-                  window.location.href = '/pages/login.html'; // Redireciona para o login
-              } else {
-                  alert('Erro ao deslogar. Tente novamente.');
-              }
-          } catch (error) {
-              console.error('Erro:', error);
-          }
-      });
-
-  } else {
-      // Caso não tenha token, mostrar o botão de login e ocultar o menu
-      profileMenu.style.display = 'none';
-      loginButton.style.display = 'block';
-  }
+  loginButton.style.display = 'block';
 });
 
+// Modal
+const hoverElement = document.querySelector('.help');
+const popup = document.querySelector('.pop');
+hoverElement.addEventListener('click', () => {
+  // Obtém o modal
+  var modal = document.getElementById("myModal");
 
+  // Obtém o botão que fecha o modal
+  var span = document.getElementsByClassName("fecharbutton")[0];
+
+  // Mostra o modal
+  modal.style.display = "block";
+  popup.classList.add('show');
+
+  // Quando o usuário clica no botão de fechar (x), fecha o modal
+  span.onclick = function() {
+    modal.style.display = "none";
+    popup.classList.remove('show');
+  }
+
+  // Quando o usuário clica em qualquer lugar fora do modal, fecha-o
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      popup.classList.remove('show');
+      modal.style.display = "none";
+    }
+  }
+});

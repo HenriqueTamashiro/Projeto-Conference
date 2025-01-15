@@ -10,30 +10,40 @@
 </head>
 <body>
   <div id="header-placeholder"></div>
-  
-  <section class="container">
-    <h1>Registrar acessos.</h1>
-    <p>
-      Preencha os campos para cadastrar no banco de dados. 
-    </p>
-    <form id="userForm" class="form">
+  <div id="table-placeholder"></div>
+  <div class="shell" id="container2ID">
+  <section class="container2" >
+    <div class="headTittle">
+      <h1>Cadastro de acessos</h1>
+      <label class="labelTop">
+        <p>Preencha os campos para cadastrar acessos<br>
+          de novos usuários.</p>
+      </label>
+    </div>
+    <form id="userForm" class="form"> 
+
         <span class="descrit">Nome Completo.</span>
         <input type="text" name="nome" placeholder="Nome" required>
+
         <span class="descrit">Cliente do prestador.</span>
         <input type="text" name="cliente" placeholder="Cliente" required>
-        <span class="descrit">Service tag ou patrimônio vinculado ao profissional.</span>
+
+        <span class="descrit">Service tag ou patrimônio vinculado <br>ao profissional.</span>
         <input type="text" name="identificador" placeholder="Service Tag ou Patrimônio" required>
-        <span class="descrit">Chave única enviada ao profissional, juntamente de seu equipamento.</span>
-        <input type="text" name="key" placeholder="Chave única" required>
+
+        <span class="descrit">Key CBYK</span>
+        <input type="text" name="key" id="randomKey" placeholder="Chave única" required>
+
         <span class="descrit">Acessos do profissional.</span>
         <textarea name="acessos" class='acessosProf' placeholder="Acessos de equipamento e e-mail" required></textarea>
         <br><br>
-        <button type="submit">Registrar</button></form><br>
+        <button type="submit" class="botao">Registrar</button></form><br>
     </form>
 
   </section>
 
-  
+</div>
+<br>
     <script src="../js/formHandler.js"></script>
 </body>
 </html>

@@ -1,11 +1,12 @@
 const bcrypt = require('bcryptjs');
 
-const senha = '1704';
-bcrypt.hash(senha, 10, (err, hash) => {
-  if (err) {
-    console.error(err);
-  } else {
-    console.log('SENHA CRIPTOGRAFADA:', hash);
-    // Insira o valor do hash no banco de dados diretamente
-  }
+const password = "#hen13ri11que96"; // Senha original
+const saltRounds = 10; // Número de rounds para o hash
+
+bcrypt.hash(password, saltRounds, (err, hash) => {
+    if (err) {
+        console.error('Erro ao criptografar a senha:', err);
+        return;
+    }
+    console.log('Senha criptografada:', hash);
 });

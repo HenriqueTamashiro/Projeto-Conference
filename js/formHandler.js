@@ -1,200 +1,151 @@
-// Função para carregar o header e gerenciar a exibição dos elementos
+// Função para carregar e atualizar o header dinamicamente
 document.addEventListener('DOMContentLoaded', async () => {
-    // Carregar o header
-    const headerResponse = await fetch('header.html');
+    const headerResponse = await fetch('/pages/header.html');
     const headerData = await headerResponse.text();
     document.getElementById('header-placeholder').innerHTML = headerData;
 
-    // Verificar o token
-    const token = localStorage.getItem('token'); 
-
-    // Referências aos elementos do header
+    const token = localStorage.getItem('token');
     const profileMenu = document.getElementById('profileMenu');
     const loginButton = document.getElementById('loginButton');
+    const logoutButton = document.getElementById('logoutButton');
     const dashboard = document.getElementById('dashboard');
-    
+  
     if (token) {
-        // Se o token existe, validar com o servidor
         try {
-            const response = await fetch('http://127.0.0.1:3300/dashboard', {
+            const response = await fetch('/dashboard', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
-
-            if (!response.ok) {
+            const result = await response.json();
+         
+            if (response.ok) {
+                dashboard.innerText = result.username;
+                profileMenu.style.display = 'block';
+                loginButton.style.display = 'none';
+                logoutButton.style.display = 'block';
+            } else {
+                window.location.replace('/pages/login.html');
                 throw new Error('Token inválido ou expirado.');
             }
-
-            const result = await response.json();
-            dashboard.innerText = result.message; // Exibe o nome do usuário
-            profileMenu.style.display = 'block';
-            loginButton.style.display = 'none';
 
         } catch (error) {
             console.error('Erro:', error);
             alert('Sua sessão expirou. Faça login novamente.');
-            localStorage.removeItem('token');  // Remove o token inválido
-            window.location.href = '/pages/login.html';  // Redireciona para a página de login
+            localStorage.removeItem('token');
+            window.location.replace('/pages/login.html');
+           
         }
-
-        // Adicionar o evento de logout
-        document.getElementById('logoutButton').addEventListener('click', async () => {
-            try {
-                const response = await fetch('/logout', {
-                    method: 'POST',
-                    credentials: 'include'
-                });
-
-                if (response.ok) {
-                    localStorage.removeItem('token'); // Remove o token
-                    window.location.href = '/pages/login.html'; // Redireciona para o login
-                } else {
-                    alert('Erro ao deslogar. Tente novamente.');
-                }
-            } catch (error) {
-                console.error('Erro:', error);
-            }
-        });
-
     } else {
-        // Caso não tenha token, mostrar o botão de login e ocultar o menu
         profileMenu.style.display = 'none';
         loginButton.style.display = 'block';
-    }
-});
-document.addEventListener('DOMContentLoaded', async () => {
-    const token = localStorage.getItem('token');  // Verifica se o token existe
-    if (!token) {
-        alert('Você precisa estar logado para acessar esta página ou não possui acesso ');
-        
-        window.location.href = '/pages/login.html';  // Redireciona para a página de login
-        return;  // Interrompe a execução
+        logoutButton.style.display = 'none';
     }
 
-    try {
-        // Caso o token exista, verificar sua validade com o servidor
-        const response = await fetch('/dashboard', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`  // Envia o token JWT para validação
-            }
-        });
 
-        if (!response.ok) {
-            throw new Error('Token inválido ou expirado.');
-        }
+    // Adicionar evento de logout
+    logoutButton.addEventListener('click', async () => {
 
-        const result = await response.json();
-        // Exibe a mensagem do servidor no elemento HTML
-        document.getElementById('dashboard').innerText = result.message;
+                localStorage.removeItem('token');
+                window.location.href = '/pages/login.html';
 
-    } catch (error) {
-        console.error('Erro:', error);
-        alert('Sua sessão expirou. Faça login novamente.');
-        localStorage.removeItem('token');  // Remove o token inválido
-        window.location.href = '/pages/login.html';  // Redireciona para a página de login
-    }
+    });
 });
 
 
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    fetch('/dashboard', {
-        method: 'GET',
+document.getElementById('userForm').addEventListener('submit',async function(event) {
+    event.preventDefault();
+    const token = localStorage.getItem('token');
+    const formData = new FormData(event.target);
+    const form = document.querySelector('.form');
+    const data = {
+        nome: formData.get('nome'),
+        cliente: formData.get('cliente'),
+        identificador: formData.get('identificador').toUpperCase(),
+        key_valor: formData.get('key'),
+        acessos: formData.get('acessos')
+    };
+    try{
+    const responseAdd = await fetch('https://conference.cbyk.com/add-user', {
+        method: 'POST',
         headers: {
-            'Authorization': localStorage.getItem('token')  // Envia o token JWT
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Erro ao carregar o dashboard.');
-        }
-        return response.json();
-    })
-    .then(result => {
-        // Exibe a mensagem do servidor no elemento HTML
-        document.getElementById('dashboard').innerText = result.message;
-    })
-    .catch(error => {
-        console.error('Erro:', error);
-        document.getElementById('dashboard').innerText = 'Falha ao carregar o dashboard.';
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)  // Usar o objeto `data` com os valores do formulário
     });
-  });
-document.getElementById('userForm').addEventListener('submit', function(event) {
-  event.preventDefault();
-  
-  const formData = new FormData(event.target);
-  const data = {
-      nome: formData.get('nome'),
-      cliente: formData.get('cliente'),
-      identificador: formData.get('identificador'),
-      key_valor: formData.get('key'),
-      acessos: formData.get('acessos') 
-  };
 
-  fetch('/add-user', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data) 
-  })
+    if (responseAdd.status === 403){ 
+        alert('Necessário estar logado');
+        } 
 
-  .then(response => response.text())
-  .then(result => {
-      console.log(result);
-      alert('Dados enviados com sucesso!');
-  })
+        else if (responseAdd.status === 400){ 
+            alert('Key já existente');
+            }
+            else if (responseAdd.status === 200){ 
+                alert('Dados adicionados!');
+                
+                const responseAcess = await fetch('/pages/responseTable.html');
+                const Acess = await responseAcess.text();
+                const resultDiv = document.getElementById('container2ID');
+                resultDiv.innerHTML = Acess;
+                
+             
+                // Usar innerText ou textContent para preencher as células da tabela
+                const nTable = document.getElementById('nameTable');
+                const cTable = document.getElementById('clientTable');
+                const iTable = document.getElementById('idTable');
+                const kTable = document.getElementById('keyTable');
+                
+                nTable.textContent = data.nome;
+                cTable.textContent = data.cliente;
+                iTable.textContent = data.identificador;
+                kTable.textContent = data.key_valor;
+                
+              
+                }
+    
+        } catch (error) {
+            alert(`Usuário adicionado com sucesso:`)
+            console.error('Erro na requisição:', error);
+        }
 
-  .catch(error => {
-      console.error('Erro ao enviar dados:', error);
-      alert('Erro ao enviar dados.');
-  });
 
-  fetch('/acessos')
-    .then(response => response.json()) // Converte a resposta para JSON
-        .then(dataGet => {
-            // Seleciona o corpo da tabela onde os dados serão inseridos
-            const displayContainer = document.querySelector('.container');
-            displayContainer.innerHTML = '';
+    });
 
-            dataGet.forEach(user => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                        <td>${user.id}</td>
-                        <td>${user.nome}</td>
-                        <td>${user.cliente}</td>
-                        <td>${user.identificador}</td>
-                        <td>${user.key_valor}</td>
-                        <td>${user.acessos}</td>
-                    `;
-                    displayContainer.appendChild(row);
+    document.getElementById('randomKey').addEventListener('click', async function(event) {
+        event.preventDefault(); // Evita o comportamento padrão do botão de submissão do formulário
+        const token = localStorage.getItem('token');
+        try {
+            // Faz uma requisição para a rota /generate-key para obter a chave aleatória
+            const response = await fetch('/generate-key', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                   'Authorization': `Bearer ${token}`
+                }
             });
-    });
 
-});
+            // Verifica se a requisição foi bem-sucedida
+            if (!response.ok) {
+                throw new Error('Erro ao gerar a chave');
+            }
 
+            // Extrai a chave da resposta JSON
+            const data = await response.json();
+      
+            // Atualiza o elemento que exibe a chave
+            const keyRandomElement = document.getElementById('randomKey');
+            if (keyRandomElement.value) {
+                return;
+            }
 
+            keyRandomElement.value = data.key;
 
-// Logout Handler
-document.getElementById('logoutButton').addEventListener('click', async () => {
-    try {
-        const response = await fetch('/logout', {
-            method: 'POST',
-            credentials: 'include'
-        });
+           
 
-        if (response.ok) {
-            localStorage.removeItem('token'); // Remove o token
-            window.location.href = '/pages/login.html'; // Redireciona para o login
-        } else {
-            alert('Erro ao deslogar. Tente novamente.');
+        } catch (error) {
+            console.error('Erro ao gerar a chave:', error);
         }
-    } catch (error) {
-        console.error('Erro:', error);
-    }
-});
-
+    });
