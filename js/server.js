@@ -24,13 +24,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Configuração da conexão com o banco de dados
 const porta_db = 3306;
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: process.env.DB_PASSWORD,
-  database: 'users',
-  port: porta_db
-});
 
 
 
@@ -46,14 +39,6 @@ async function findUserByUsername(username) {
   });
 }
 console.log('Servidor de DB rodando na porta: ', porta_db);
-
-connection.connect(err => {
-  if (err) {
-    console.error('Erro ao conectar ao banco de dados: ', err);
-    return;
-  }
-  console.log('Conectado ao banco de dados!');
-});
 
 
 app.use(session({
