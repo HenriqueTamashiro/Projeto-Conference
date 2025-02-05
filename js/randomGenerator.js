@@ -5,3 +5,4 @@ function gerarNumeroAleatorio() {
 
 const numeroAleatorio = gerarNumeroAleatorio();
 console.log(numeroAleatorio);
+ 
