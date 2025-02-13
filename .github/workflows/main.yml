@@ -12,6 +12,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
       - name: Deploy to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no user@your-ec2-ip 'bash -s' < ./deploy-script.sh
+          ssh -o StrictHostKeyChecking=no ubuntu@ec2-34-207-139-134.compute-1.amazonaws.com 'bash -s' < ./deploy-script.sh
