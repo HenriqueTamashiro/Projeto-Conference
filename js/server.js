@@ -200,7 +200,7 @@ app.post('/generate-key', authenticateToken, (req, res) => {
   };
 
   const gerarChaveUnica = () => {
-    const chaveAleatoria = gerarChaveAleatoria(8); // Gera uma chave de 10 caracteres
+    const chaveAleatoria = gerarChaveAleatoria(8); // Gera uma chave de (x) caracteres
 
     // Verifica se a chave já existe no banco de dados
     const checkKeyQuery = 'SELECT * FROM usuarios WHERE key_valor = ?';
