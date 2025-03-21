@@ -81,7 +81,9 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-
+app.get ('/healthz' , (req, res) => {
+  res.status(200).send({ message: 'Ok' });
+})
 
 app.post('/add-user', authenticateToken, (req, res) => {
   const { nome, cliente, identificador, key_valor, acessos } = req.body;
@@ -198,7 +200,7 @@ app.post('/generate-key', authenticateToken, (req, res) => {
   };
 
   const gerarChaveUnica = () => {
-    const chaveAleatoria = gerarChaveAleatoria(12); // Gera uma chave de 10 caracteres
+    const chaveAleatoria = gerarChaveAleatoria(8); // Gera uma chave de 10 caracteres
 
     // Verifica se a chave já existe no banco de dados
     const checkKeyQuery = 'SELECT * FROM usuarios WHERE key_valor = ?';
